@@ -18,8 +18,14 @@ public:
 	void SetLocationAndRotation(const FVector& InCameraLocation, const FRotator& InCameraRotation);
 	virtual void UpdateViewTarget(FTViewTarget& OutVT, float DeltaTime) override;
 
+	UPROPERTY(VisibleAnywhere)
+	float MinimapScale = 0.25f;
+
 private:
 
+	UPROPERTY(VisibleAnywhere)
 	FVector CameraLocation;
+
+	UPROPERTY(VisibleAnywhere)
 	FRotator CameraRotation;
 };

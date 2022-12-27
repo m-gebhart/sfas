@@ -2,7 +2,11 @@
 
 #include "Screens/SettingsScreen.h"
 
+#include "Gameplay.h"
+#include "STBPlayerCameraManager.h"
 #include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
+#include "Screens/PlayingScreen.h"
 #include "STB/STBGameModes.h"
 
 void USettingsScreen::NativeConstruct()
@@ -15,13 +19,28 @@ void USettingsScreen::NativeConstruct()
 		{
 			VolumeFormat = Texts[Count]->Text;
 			VolumeTextIndex = Count;
-			break;
+		}
+		else if (Texts[Count]->Text.ToString().Contains("Minimap"))
+		{
+			MinimapSizeFormat = Texts[Count]->Text.ToString();
+			MinimapSizeTextIndex = Count;
 		}
 	}
-	
+
 	CurrentVolume = 1.0f;
-	UpdatedChangedVolume();
+	CurrentMinimapSize = EMinimapSize::Medium;
 }
+
+void USettingsScreen::Show(bool bShow)
+{
+	Super::Show(bShow);
+
+	if (bShow)
+	{
+		UpdateUI();
+	}
+}
+
 
 void USettingsScreen::Back_Implementation()
 {
@@ -34,13 +53,13 @@ void USettingsScreen::Back_Implementation()
 void USettingsScreen::Alt1_Implementation()
 {
 	CurrentVolume = FMath::Clamp(CurrentVolume + 0.1f, 0.0f, 1.0f);
-	UpdatedChangedVolume();
+	UpdateUI();
 }
 
 void USettingsScreen::Alt2_Implementation()
 {
 	CurrentVolume = FMath::Clamp(CurrentVolume - 0.1f, 0.0f, 1.0f);
-	UpdatedChangedVolume();
+	UpdateUI();
 }
 
 void USettingsScreen::UpdatedChangedVolume()
@@ -52,4 +71,66 @@ void USettingsScreen::UpdatedChangedVolume()
 	
 	USoundClass * Class = GetDefault<UAudioSettings>()->GetDefaultSoundClass();
 	Class->Properties.Volume = CurrentVolume; 
+}
+
+void USettingsScreen::Special1_Implementation()
+{
+	//Decrease Value of Minimap Size
+	const uint8 CurrentSizeIndex = FMath::Clamp(static_cast<uint8>(CurrentMinimapSize) -1 , 0, 2);
+	switch (CurrentSizeIndex)
+	{
+		default:
+		case 0:
+			CurrentMinimapSize = EMinimapSize::Small; break;
+		case 1:
+			CurrentMinimapSize = EMinimapSize::Medium; break;
+		case 2:
+			CurrentMinimapSize = EMinimapSize::Big; break;
+	}
+	
+	UpdateUI();
+}
+
+void USettingsScreen::Special2_Implementation()
+{
+	//Increase Value of Minimap Size
+	const uint8 CurrentSizeIndex = FMath::Clamp(static_cast<uint8>(CurrentMinimapSize) +1 , 0, 2);
+	switch (CurrentSizeIndex)
+	{
+	default:
+	case 0:
+		CurrentMinimapSize = EMinimapSize::Small; break;
+	case 1:
+		CurrentMinimapSize = EMinimapSize::Medium; break;
+	case 2:
+		CurrentMinimapSize = EMinimapSize::Big; break;
+	}
+	
+	UpdateUI();
+}
+
+
+void USettingsScreen::UpdatedChangedMinimapSize()
+{
+	if(MinimapSizeTextIndex >= 0 && MinimapSizeTextIndex < Texts.Num())
+	{
+		FString SizeStr = StaticEnum<EMinimapSize>()->GetValueAsString(CurrentMinimapSize);
+		SizeStr.Split("::", nullptr, &SizeStr);
+		MinimapSizeFormat.Split("{", &MinimapSizeFormat, nullptr);
+
+		Texts[MinimapSizeTextIndex]->SetText(FText::FromString(MinimapSizeFormat + SizeStr));
+	}
+
+	ASTBPlayerCameraManager* Class = Cast<ASTBPlayerCameraManager>(PlayerController->PlayerCameraManager);
+	const float updatedScale = 0.2f*(static_cast<uint8>(CurrentMinimapSize)+1.f);
+	if (Class != nullptr)
+	{
+		Class->MinimapScale = updatedScale;
+	}
+}
+
+void USettingsScreen::UpdateUI()
+{
+	UpdatedChangedVolume();
+	UpdatedChangedMinimapSize();
 }

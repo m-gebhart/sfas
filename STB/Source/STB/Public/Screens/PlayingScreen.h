@@ -31,11 +31,13 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void Select_Implementation() override;
 	virtual void Show(bool bShow) override;
-	
+
+
 private:
 
 	void SetLevel(int Level);
 	void SetLives(int Lives);
+	void SetMinimap();
 	void ShowLevel(bool bShow);
 	void ShowLives(bool bShow);	
 	void ShowPrompt(bool bShow);	
@@ -50,7 +52,7 @@ private:
 	FText LivesTextFormat;
 
 	UPROPERTY(VisibleAnywhere)
-	int TargetImageIndex;	
+	int TargetImageIndex;
 
 	UPROPERTY(VisibleAnywhere)
 	int GuessImageIndex;	
@@ -63,6 +65,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	int PromptTextIndex;
+	
+	UPROPERTY(VisibleAnywhere)
+	int MinimapImageIndex;
 
 	UPROPERTY(VisibleAnywhere)
 	EPlayingState PlayingState;
@@ -72,5 +77,4 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	FColor LoseColor = FColor::Red;
-
 };

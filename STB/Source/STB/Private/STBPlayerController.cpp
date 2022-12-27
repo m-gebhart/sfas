@@ -7,6 +7,7 @@
 #include "ProgressionData.h"
 #include "Gameplay.h"
 #include "Screen.h"
+#include "Screens/PlayingScreen.h"
 #include "STBPlayerCameraManager.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/PawnMovementComponent.h"
@@ -17,6 +18,8 @@ const FString ASTBPlayerController::TopButtonActionName = TEXT("TopButton");
 const FString ASTBPlayerController::LeftButtonActionName = TEXT("LeftButton");
 const FString ASTBPlayerController::RightButtonActionName = TEXT("RightButton");
 const FString ASTBPlayerController::BottomButtonActionName = TEXT("BottomButton");
+const FString ASTBPlayerController::SpecialLeftButtonActionName = TEXT("SpecialLeftButton");
+const FString ASTBPlayerController::SpecialRightButtonActionName = TEXT("SpecialRightButton");
 const FString ASTBPlayerController::LeftStickXAxisName = TEXT("LeftX");
 const FString ASTBPlayerController::LeftStickYAxisName = TEXT("LeftY");
 const FString ASTBPlayerController::RightStickXAxisName = TEXT("RightX");
@@ -76,7 +79,7 @@ void ASTBPlayerController::Tick(float DeltaSeconds)
 	{
 		const auto Bounds = Gameplay->GetCurrentBallBounds();
 		DrawDebugBox(GetWorld(), Bounds.Origin, Bounds.BoxExtent, FColor::Green, false, 0.2f, SDPG_Foreground, 1.0f);		
-		DrawDebugSphere(GetWorld(), Gameplay->GetBallLocation(), 20.0f, 10.0f, FColor::Red, false, 0.2f, SDPG_Foreground, 1.0f);
+		DrawDebugSphere(GetWorld(), Gameplay->GetBallLocation(), Bounds.SphereRadius, 10.0f, FColor::Red, false, 0.2f, SDPG_Foreground, 1.0f);
 	}
 }
 
@@ -125,12 +128,6 @@ void ASTBPlayerController::ContinueGame()
 
 void ASTBPlayerController::ShowUI(ESTBGameMode State)
 {
-	Widgets[static_cast<int>(State)]->Show(true);
-	Widgets[static_cast<int>(CurrentState)]->Show(false);
-	CurrentState = State;
-
-	/*
-	 * implementation above for performance reason
  	const int TargetModeIndex = static_cast<int>(State);
 
 	for(int Count = 0; Count < static_cast<int>(ESTBGameMode::NumModes); ++Count)
@@ -138,8 +135,7 @@ void ASTBPlayerController::ShowUI(ESTBGameMode State)
 		const bool bShow = Count == TargetModeIndex;
 		Widgets[Count]->Show(bShow);
 		CurrentState = State;
-	}
-	*/
+	} 
 }
 
 const UGameplay* ASTBPlayerController::GetGameplay() const 
@@ -154,7 +150,7 @@ const FVector2D& ASTBPlayerController::GetCurrentPlayerLocation() const
 
 FVector2D ASTBPlayerController::GetCurrentBallLocation() const
 {
-	const FVector2D ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
+	static const FVector2D ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY()); //Cast<UPlayingScreen>(PlayingClass)->GetMinimapSize(); //
 	FVector2D ScreenLocation = FVector2D::ZeroVector;
 	
 	if(IsValid(Gameplay))
@@ -197,6 +193,8 @@ void ASTBPlayerController::SetupInputComponent()
 		InputComponent->BindAction(*LeftButtonActionName, IE_Pressed, this, &ASTBPlayerController::LeftButtonPress);
 		InputComponent->BindAction(*RightButtonActionName, IE_Pressed, this, &ASTBPlayerController::RightButtonPress);
 		InputComponent->BindAction(*BottomButtonActionName, IE_Pressed, this, &ASTBPlayerController::BottomButtonPress);
+		InputComponent->BindAction(*SpecialLeftButtonActionName, IE_Pressed, this, &ASTBPlayerController::SpecialLeftButtonPress);
+		InputComponent->BindAction(*SpecialRightButtonActionName, IE_Pressed, this, &ASTBPlayerController::SpecialRightButtonPress);
 
 		InputComponent->BindAxis(*RightStickXAxisName, this, &ASTBPlayerController::LeftRight);
 		InputComponent->BindAxis(*RightStickYAxisName, this, &ASTBPlayerController::UpDown);
@@ -216,7 +214,7 @@ void ASTBPlayerController::LeftRight(float Value)
 {
 	if(CurrentState == ESTBGameMode::Playing)
 	{
-		CurrentPlayerLocation.X = FMath::Clamp(CurrentPlayerLocation.X + Value, -PlayerLocationXRange, PlayerLocationXRange);
+		CurrentPlayerLocation.X = FMath::Clamp(CurrentPlayerLocation.X + Value*PlayerSpeed, -PlayerLocationXRange, PlayerLocationXRange);
 	}
 }
 
@@ -224,7 +222,7 @@ void ASTBPlayerController::UpDown(float Value)
 {
 	if(CurrentState == ESTBGameMode::Playing)
 	{
-		CurrentPlayerLocation.Y = FMath::Clamp(CurrentPlayerLocation.Y + Value, -PlayerLocationXRange, PlayerLocationXRange);
+		CurrentPlayerLocation.Y = FMath::Clamp(CurrentPlayerLocation.Y + Value*PlayerSpeed, -PlayerLocationXRange, PlayerLocationXRange);
 	}
 }
 
@@ -260,3 +258,18 @@ void ASTBPlayerController::BottomButtonPress()
 	}	
 }
 
+void ASTBPlayerController::SpecialLeftButtonPress()
+{
+	if(const int Index = static_cast<int>(CurrentState); Index >= 0 && Index < static_cast<int>(ESTBGameMode::NumModes))
+	{
+		Widgets[Index]->Special1();
+	}
+}
+
+void ASTBPlayerController::SpecialRightButtonPress()
+{
+	if(const int Index = static_cast<int>(CurrentState); Index >= 0 && Index < static_cast<int>(ESTBGameMode::NumModes))
+	{
+		Widgets[Index]->Special2();
+	}
+}

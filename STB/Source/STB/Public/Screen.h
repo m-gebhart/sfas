@@ -56,6 +56,14 @@ public:
 	virtual void Alt2_Implementation();
 
 	UFUNCTION(BlueprintNativeEvent)
+	void Special1();
+	virtual void Special1_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void Special2();
+	virtual void Special2_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent)
 	void OnShown();
 	virtual void OnShown_Implementation();
 

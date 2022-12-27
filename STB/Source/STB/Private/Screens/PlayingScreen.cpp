@@ -3,6 +3,7 @@
 #include "Screens/PlayingScreen.h"
 
 #include "Gameplay.h"
+#include "STBPlayerCameraManager.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
@@ -40,7 +41,11 @@ void UPlayingScreen::NativeConstruct()
 		else if(Images[Count]->GetName().Contains("Guess"))
 		{
 			GuessImageIndex = Count;
-		} 
+		}
+		else if(Images[Count]->GetName().Contains("Minimap"))
+		{
+			MinimapImageIndex = Count;
+		}
 	}	
 	
 	SetLevel(1);
@@ -52,9 +57,10 @@ void UPlayingScreen::NativeConstruct()
 void UPlayingScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-
+	
 	if(IsValid(PlayerController))
 	{
+		//Fade In Animation after Guess
 		if(PlayingState == EPlayingState::Showing)
 		{
 			if(TargetImageIndex >= 0 && TargetImageIndex < Images.Num())
@@ -65,7 +71,8 @@ void UPlayingScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 				{
 					Images[GuessImageIndex]->SetOpacity(1.0f - Images[TargetImageIndex]->ColorAndOpacity.A);
 				}
-				
+
+				//Fully Faded In
 				if(Images[TargetImageIndex]->ColorAndOpacity.A >= 1.0f)
 				{
 					PlayingState = EPlayingState::Shown;
@@ -73,13 +80,14 @@ void UPlayingScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			}
 		}
 
-		if(GuessImageIndex >= 0 && GuessImageIndex < Images.Num())
+		//Set Cursor position
+		if(PlayingState == EPlayingState::Guessing && GuessImageIndex >= 0 && GuessImageIndex < Images.Num())
 		{
 			const FVector2D GuessLocation = PlayerController->GetCurrentPlayerLocation();
 			if(UCanvasPanelSlot* GuessSlot = Cast<UCanvasPanelSlot>(Images[GuessImageIndex]->Slot))
 			{
 				GuessSlot->SetPosition(GuessLocation);
-			}
+			}	
 		}
 	}	
 }
@@ -112,6 +120,7 @@ void UPlayingScreen::Select_Implementation()
 void UPlayingScreen::Show(bool bShow)
 {
 	Super::Show(bShow);
+	SetMinimap();
 
 	if(bShow)
 	{
@@ -132,6 +141,24 @@ void UPlayingScreen::SetLives(int Lives)
 	if(LivesTextIndex >= 0 && LivesTextIndex < Texts.Num())
 	{
 		Texts[LivesTextIndex]->SetText(FText::Format(LivesTextFormat, Lives));
+	}
+}
+
+void UPlayingScreen::SetMinimap()
+{
+	if (UCanvasPanelSlot* MinimapSlot = Cast<UCanvasPanelSlot>(Images[MinimapImageIndex]->Slot))
+	{
+		//Set Minimap Size
+		ASTBPlayerCameraManager* PlayerCameraManager = Cast<ASTBPlayerCameraManager>(PlayerController->PlayerCameraManager);
+		
+		FVector2D MinimapSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY())*PlayerCameraManager->MinimapScale;
+		MinimapSlot->SetSize(MinimapSize);
+
+		//Attach Level Text right below Minimap
+		if (UCanvasPanelSlot* LevelTextSlot = Cast<UCanvasPanelSlot>(Texts[LevelTextIndex]->Slot))
+		{
+			LevelTextSlot->SetPosition(FVector2D(LevelTextSlot->GetPosition().X, MinimapSize.Y));
+		}
 	}
 }
 
@@ -169,7 +196,7 @@ void UPlayingScreen::SetBallLocation()
 			TargetSlot->SetPosition(BallLocation);
 		}
 
-		Images[TargetImageIndex]->SetOpacity(0.0f);
+		Images[TargetImageIndex]->SetOpacity(1.0f);
 	}
 }
 

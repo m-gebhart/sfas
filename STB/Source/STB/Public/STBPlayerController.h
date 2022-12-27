@@ -50,12 +50,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool TryMove();
+
 	
 protected:
 
 	virtual void BeginPlay() override;	
 	virtual void SetupInputComponent() override;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UScreen> IntroClass;
 
@@ -67,7 +68,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UScreen> PlayingClass;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UScreen> GameOverClass;
 
@@ -97,6 +98,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
 	float PlayerLocationYRange = 300.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	float PlayerSpeed = 3.0f;
 	
 private:
 
@@ -120,6 +124,12 @@ private:
 	UFUNCTION()
 	void BottomButtonPress();
 
+	UFUNCTION()
+	void SpecialLeftButtonPress();
+
+	UFUNCTION()
+	void SpecialRightButtonPress();
+
 	UPROPERTY(VisibleAnywhere)
 	UGameplay * Gameplay;
 	
@@ -139,6 +149,8 @@ private:
 	static const FString LeftButtonActionName;
 	static const FString RightButtonActionName;
 	static const FString BottomButtonActionName;
+	static const FString SpecialLeftButtonActionName;
+	static const FString SpecialRightButtonActionName;
 	static const FString LeftStickXAxisName;
 	static const FString LeftStickYAxisName;
 	static const FString RightStickXAxisName;
