@@ -191,10 +191,11 @@ void UPlayingScreen::SetBallLocation()
 	if(TargetImageIndex >= 0 && TargetImageIndex < Images.Num())
 	{
 		const FVector BallLocation = PlayerController->GetGameplay()->GetNormalizedBallLocation(); // GetCurrentBallRot
-		UE_LOG(LogTemp, Warning, TEXT("LOC: %f; %f"), BallLocation.X, BallLocation.Y);
 		if(UCanvasPanelSlot* TargetSlot = Cast<UCanvasPanelSlot>(Images[TargetImageIndex]->Slot))
 		{
-			TargetSlot->SetPosition(FVector2D(BallLocation.X*MinimapSize.X, BallLocation.Y*MinimapSize.Y));
+			//Inverse Components (Minimap is X/-Y-Axis and Scene is Y/X-Axis)
+			const FVector2D TargetPos(BallLocation.Y*MinimapSize.Y, MinimapSize.X-BallLocation.X*MinimapSize.X);
+			TargetSlot->SetPosition(TargetPos);
 		}
 
 		Images[TargetImageIndex]->SetOpacity(1.0f);
