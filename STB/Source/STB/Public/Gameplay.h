@@ -32,6 +32,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	const FVector& GetBallLocation() const;
+
+	UFUNCTION(BlueprintCallable)
+	const FVector GetNormalizedBallLocation() const;
 	
 	UFUNCTION(BlueprintCallable)
 	int GetLevel() const;

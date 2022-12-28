@@ -2,6 +2,7 @@
 
 #include "Screens/PlayingScreen.h"
 
+#include "AIController.h"
 #include "Gameplay.h"
 #include "STBPlayerCameraManager.h"
 #include "Components/CanvasPanel.h"
@@ -86,7 +87,7 @@ void UPlayingScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			const FVector2D GuessLocation = PlayerController->GetCurrentPlayerLocation();
 			if(UCanvasPanelSlot* GuessSlot = Cast<UCanvasPanelSlot>(Images[GuessImageIndex]->Slot))
 			{
-				GuessSlot->SetPosition(GuessLocation);
+				GuessSlot->SetPosition(GuessLocation*MinimapSize);
 			}	
 		}
 	}	
@@ -150,8 +151,7 @@ void UPlayingScreen::SetMinimap()
 	{
 		//Set Minimap Size
 		ASTBPlayerCameraManager* PlayerCameraManager = Cast<ASTBPlayerCameraManager>(PlayerController->PlayerCameraManager);
-		
-		FVector2D MinimapSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY())*PlayerCameraManager->MinimapScale;
+		MinimapSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY())*PlayerCameraManager->MinimapScale;
 		MinimapSlot->SetSize(MinimapSize);
 
 		//Attach Level Text right below Minimap
@@ -190,10 +190,11 @@ void UPlayingScreen::SetBallLocation()
 {
 	if(TargetImageIndex >= 0 && TargetImageIndex < Images.Num())
 	{
-		const FVector2D BallLocation = PlayerController->GetCurrentBallLocation();
+		const FVector BallLocation = PlayerController->GetGameplay()->GetNormalizedBallLocation(); // GetCurrentBallRot
+		UE_LOG(LogTemp, Warning, TEXT("LOC: %f; %f"), BallLocation.X, BallLocation.Y);
 		if(UCanvasPanelSlot* TargetSlot = Cast<UCanvasPanelSlot>(Images[TargetImageIndex]->Slot))
 		{
-			TargetSlot->SetPosition(BallLocation);
+			TargetSlot->SetPosition(FVector2D(BallLocation.X*MinimapSize.X, BallLocation.Y*MinimapSize.Y));
 		}
 
 		Images[TargetImageIndex]->SetOpacity(1.0f);

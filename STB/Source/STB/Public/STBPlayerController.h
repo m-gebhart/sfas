@@ -93,14 +93,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
 	float RadiusScale = 10.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
-	float PlayerLocationXRange = 500.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
-	float PlayerLocationYRange = 300.0f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
-	float PlayerSpeed = 3.0f;
+	float PlayerSpeed = 0.01f;
 	
 private:
 
@@ -129,7 +123,7 @@ private:
 
 	UFUNCTION()
 	void SpecialRightButtonPress();
-
+	
 	UPROPERTY(VisibleAnywhere)
 	UGameplay * Gameplay;
 	

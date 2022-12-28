@@ -1,5 +1,7 @@
 ﻿#include "Gameplay.h"
 
+#include "Kismet/KismetMathLibrary.h"
+
 UGameplay::UGameplay()
 {
 	CurrentLevel = 0;
@@ -48,6 +50,16 @@ const FVector& UGameplay::GetBallLocation() const
 {
 	return BallLocation;
 }
+
+const FVector UGameplay::GetNormalizedBallLocation() const
+{
+	FVector NormalizedLocation;
+	NormalizedLocation.X = UKismetMathLibrary::NormalizeToRange(GetBallLocation().X+ CurrentBallBounds.BoxExtent.X, 0, CurrentBallBounds.BoxExtent.X*2);
+	NormalizedLocation.Y = UKismetMathLibrary::NormalizeToRange(GetBallLocation().Y+ CurrentBallBounds.BoxExtent.Y, 0, CurrentBallBounds.BoxExtent.Y*2);
+	NormalizedLocation.Z = UKismetMathLibrary::NormalizeToRange(GetBallLocation().Z+ CurrentBallBounds.BoxExtent.Z, 0, CurrentBallBounds.BoxExtent.Z*2);
+	return NormalizedLocation;
+}
+
 
 int UGameplay::GetLevel() const
 {

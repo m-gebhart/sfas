@@ -77,4 +77,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	FColor LoseColor = FColor::Red;
+
+	UPROPERTY(VisibleAnywhere)
+	FVector2D MinimapSize;
 };

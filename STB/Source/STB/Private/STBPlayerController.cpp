@@ -150,7 +150,7 @@ const FVector2D& ASTBPlayerController::GetCurrentPlayerLocation() const
 
 FVector2D ASTBPlayerController::GetCurrentBallLocation() const
 {
-	static const FVector2D ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY()); //Cast<UPlayingScreen>(PlayingClass)->GetMinimapSize(); //
+	//static const FVector2D ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
 	FVector2D ScreenLocation = FVector2D::ZeroVector;
 	
 	if(IsValid(Gameplay))
@@ -159,7 +159,7 @@ FVector2D ASTBPlayerController::GetCurrentBallLocation() const
 		ProjectWorldLocationToScreen(BallLocation, ScreenLocation, true);
 	}
 	
-	return ScreenLocation - (ViewportSize * 0.5f);
+	return ScreenLocation/* - (ViewportSize * 0.5f)*/;
 }
 
 bool ASTBPlayerController::TryMove()
@@ -214,7 +214,7 @@ void ASTBPlayerController::LeftRight(float Value)
 {
 	if(CurrentState == ESTBGameMode::Playing)
 	{
-		CurrentPlayerLocation.X = FMath::Clamp(CurrentPlayerLocation.X + Value*PlayerSpeed, -PlayerLocationXRange, PlayerLocationXRange);
+		CurrentPlayerLocation.X = FMath::Clamp(CurrentPlayerLocation.X + Value*PlayerSpeed, 0, 1.f);
 	}
 }
 
@@ -222,7 +222,7 @@ void ASTBPlayerController::UpDown(float Value)
 {
 	if(CurrentState == ESTBGameMode::Playing)
 	{
-		CurrentPlayerLocation.Y = FMath::Clamp(CurrentPlayerLocation.Y + Value*PlayerSpeed, -PlayerLocationXRange, PlayerLocationXRange);
+		CurrentPlayerLocation.Y = FMath::Clamp(CurrentPlayerLocation.Y + Value*PlayerSpeed, 0, 1.f);
 	}
 }
 
