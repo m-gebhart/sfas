@@ -80,4 +80,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	FVector2D MinimapSize;
+
+	UPROPERTY(VisibleAnywhere)
+	float MinimapPadding = 50.f;
 };

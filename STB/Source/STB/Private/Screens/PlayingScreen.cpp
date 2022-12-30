@@ -88,7 +88,7 @@ void UPlayingScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			const FVector2D GuessLocation = PlayerController->GetCurrentPlayerLocation();
 			if(UCanvasPanelSlot* GuessSlot = Cast<UCanvasPanelSlot>(Images[GuessImageIndex]->Slot))
 			{
-				GuessSlot->SetPosition(FVector2D(GuessLocation.X*MinimapSize.X, MinimapSize.Y-GuessLocation.Y*MinimapSize.Y));
+				GuessSlot->SetPosition(FVector2D(MinimapPadding + GuessLocation.X*MinimapSize.X, (MinimapSize.Y+MinimapPadding)-(GuessLocation.Y*MinimapSize.Y + MinimapPadding)));
 			}	
 		}
 	}	
@@ -153,7 +153,7 @@ void UPlayingScreen::SetMinimap()
 		//Set Minimap Size
 		ASTBPlayerCameraManager* PlayerCameraManager = Cast<ASTBPlayerCameraManager>(PlayerController->PlayerCameraManager);
 		MinimapSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY())*PlayerCameraManager->MinimapScale;
-		MinimapSlot->SetSize(MinimapSize);
+		MinimapSlot->SetSize(MinimapSize + FVector2D(MinimapPadding*2));
 
 		//Attach Level Text right below Minimap
 		if (UCanvasPanelSlot* LevelTextSlot = Cast<UCanvasPanelSlot>(Texts[LevelTextIndex]->Slot))
@@ -195,7 +195,7 @@ void UPlayingScreen::SetBallLocation()
 		if(UCanvasPanelSlot* TargetSlot = Cast<UCanvasPanelSlot>(Images[TargetImageIndex]->Slot))
 		{
 			//Inverse Components for Minimap (Minimap is X/-Y-Axis and Scene is Y/X-Axis)
-			const FVector2D TargetPos(BallLocation.Y*MinimapSize.X, MinimapSize.Y-BallLocation.X*MinimapSize.Y);
+			const FVector2D TargetPos(MinimapPadding + BallLocation.Y*MinimapSize.X, (MinimapSize.Y + MinimapPadding)-(BallLocation.X*MinimapSize.Y + MinimapPadding));
 			TargetSlot->SetPosition(TargetPos);
 		}
 	}
