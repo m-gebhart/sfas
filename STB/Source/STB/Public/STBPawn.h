@@ -15,4 +15,10 @@ public:
 
 	ASTBPawn();
 
+	void MoveTo(FVector2D Coord, const FBoxSphereBounds &LevelBounds);
+
+	UPROPERTY(EditAnywhere, Category="Moevment")
+	float MovementHeight = 100.f;
+	
+	//void AddMovementInput(FVector WorldDirection, float ScaleValue, bool bForce) override;
 };

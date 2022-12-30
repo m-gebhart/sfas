@@ -9,7 +9,12 @@
 
 ASTBGameModeBase::ASTBGameModeBase()
 {
-	DefaultPawnClass = ASTBPawn::StaticClass();
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/Blueprints/BP_Player"));
+	if (DefaultPawnClass)
+		DefaultPawnClass = PlayerPawnClassFinder.Class;
+	else
+		DefaultPawnClass = ASTBPawn::StaticClass();
+	
 	PlayerControllerClass = ASTBPlayerController::StaticClass();
 }
 

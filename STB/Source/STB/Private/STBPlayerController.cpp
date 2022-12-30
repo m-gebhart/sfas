@@ -7,6 +7,7 @@
 #include "ProgressionData.h"
 #include "Gameplay.h"
 #include "Screen.h"
+#include "STBPawn.h"
 #include "Screens/PlayingScreen.h"
 #include "STBPlayerCameraManager.h"
 #include "GameFramework/Character.h"
@@ -78,6 +79,7 @@ void ASTBPlayerController::Tick(float DeltaSeconds)
 	if(IsValid(Gameplay) && CurrentState == ESTBGameMode::Playing)
 	{
 		const auto Bounds = Gameplay->GetCurrentBallBounds();
+		PlayerPawn->MoveTo(CurrentPlayerLocation, Bounds);
 		DrawDebugBox(GetWorld(), Bounds.Origin, Bounds.BoxExtent, FColor::Green, false, 0.2f, SDPG_Foreground, 1.0f);		
 		DrawDebugSphere(GetWorld(), Gameplay->GetBallLocation(), Bounds.SphereRadius, 10.0f, FColor::Red, false, 0.2f, SDPG_Foreground, 1.0f);
 	}
@@ -100,6 +102,7 @@ void ASTBPlayerController::BeginNewGame()
 	if(Gameplay != nullptr)
 	{
 		CurrentPlayerLocation = FVector2D::ZeroVector;
+		PlayerPawn = dynamic_cast<ASTBPawn*>(GetPawn());
 		Gameplay->StartNewGame();
 		Gameplay->NextLevel();
 	}
@@ -164,7 +167,7 @@ FVector2D ASTBPlayerController::GetCurrentBallLocation() const
 
 bool ASTBPlayerController::TryMove()
 {
-	return Gameplay->TryMove(CurrentPlayerLocation, GetCurrentBallLocation());
+	return Gameplay->TryMove3D(PlayerPawn->GetActorLocation(), Gameplay->GetBallLocation());
 }
 
 void ASTBPlayerController::BeginPlay()
@@ -196,8 +199,8 @@ void ASTBPlayerController::SetupInputComponent()
 		InputComponent->BindAction(*SpecialLeftButtonActionName, IE_Pressed, this, &ASTBPlayerController::SpecialLeftButtonPress);
 		InputComponent->BindAction(*SpecialRightButtonActionName, IE_Pressed, this, &ASTBPlayerController::SpecialRightButtonPress);
 
-		InputComponent->BindAxis(*RightStickXAxisName, this, &ASTBPlayerController::LeftRight);
-		InputComponent->BindAxis(*RightStickYAxisName, this, &ASTBPlayerController::UpDown);
+		InputComponent->BindAxis(*LeftStickXAxisName, this, &ASTBPlayerController::LeftRight);
+		InputComponent->BindAxis(*LeftStickYAxisName, this, &ASTBPlayerController::UpDown);
 	}
 }
 

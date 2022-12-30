@@ -9,6 +9,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Screens/SettingsScreen.h"
 
 
 void UPlayingScreen::NativeConstruct()
@@ -87,7 +88,7 @@ void UPlayingScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			const FVector2D GuessLocation = PlayerController->GetCurrentPlayerLocation();
 			if(UCanvasPanelSlot* GuessSlot = Cast<UCanvasPanelSlot>(Images[GuessImageIndex]->Slot))
 			{
-				GuessSlot->SetPosition(GuessLocation*MinimapSize);
+				GuessSlot->SetPosition(FVector2D(GuessLocation.X*MinimapSize.X, MinimapSize.Y-GuessLocation.Y*MinimapSize.Y));
 			}	
 		}
 	}	
@@ -193,12 +194,10 @@ void UPlayingScreen::SetBallLocation()
 		const FVector BallLocation = PlayerController->GetGameplay()->GetNormalizedBallLocation(); // GetCurrentBallRot
 		if(UCanvasPanelSlot* TargetSlot = Cast<UCanvasPanelSlot>(Images[TargetImageIndex]->Slot))
 		{
-			//Inverse Components (Minimap is X/-Y-Axis and Scene is Y/X-Axis)
-			const FVector2D TargetPos(BallLocation.Y*MinimapSize.Y, MinimapSize.X-BallLocation.X*MinimapSize.X);
+			//Inverse Components for Minimap (Minimap is X/-Y-Axis and Scene is Y/X-Axis)
+			const FVector2D TargetPos(BallLocation.Y*MinimapSize.X, MinimapSize.Y-BallLocation.X*MinimapSize.Y);
 			TargetSlot->SetPosition(TargetPos);
 		}
-
-		Images[TargetImageIndex]->SetOpacity(1.0f);
 	}
 }
 
@@ -219,7 +218,7 @@ void UPlayingScreen::Reset()
 {
 	if(TargetImageIndex >= 0 && TargetImageIndex < Images.Num())
 	{
-		Images[TargetImageIndex]->SetOpacity(0.0f);
+		Images[TargetImageIndex]->SetOpacity(1.0f);
 	}
 
 	if(GuessImageIndex >= 0 && GuessImageIndex < Images.Num())

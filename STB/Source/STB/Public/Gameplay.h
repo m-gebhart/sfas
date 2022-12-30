@@ -44,6 +44,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool GetWin() const;
+
+	UFUNCTION(BlueprintCallable)
+	bool TryMove3D(const FVector& PlayerGuess3D, const FVector& BallLocation3D);
 	
 	UFUNCTION(BlueprintCallable)
 	bool TryMove(const FVector2D& PlayerGuess, const FVector2D& BallLocation2D);

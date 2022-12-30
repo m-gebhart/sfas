@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "STBPawn.h"
 #include "GameFramework/PlayerController.h"
 #include "STBPlayerController.generated.h"
 
@@ -126,6 +127,9 @@ private:
 	
 	UPROPERTY(VisibleAnywhere)
 	UGameplay * Gameplay;
+
+	UPROPERTY(VisibleAnywhere)
+	ASTBPawn* PlayerPawn;
 	
 	UPROPERTY(VisibleAnywhere, Category = "UI")
 	TArray<UScreen*> Widgets;

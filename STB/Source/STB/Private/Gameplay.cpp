@@ -76,11 +76,19 @@ bool UGameplay::GetWin() const
 	return bWin;
 }
 
+bool UGameplay::TryMove3D(const FVector& PlayerGuess3D, const FVector& BallLocation3D)
+{
+	const FVector2D PlayerLocation2D(PlayerGuess3D.X, PlayerGuess3D.Y);
+	const FVector2D BallLocation2D(BallLocation3D.X, BallLocation3D.Y);
+	return TryMove(PlayerLocation2D, BallLocation2D);
+}
+
+
 bool UGameplay::TryMove(const FVector2D& PlayerGuess, const FVector2D& BallLocation2D)
 {
 	bWin = false;
 	const float Distance = FVector2D::Distance(BallLocation2D, PlayerGuess);
-
+	
 	if(Distance <= CurrentRequiredDistance)
 	{
 		CurrentLevel = FMath::Clamp(CurrentLevel + 1, 0, Levels->GetNumLevels());
