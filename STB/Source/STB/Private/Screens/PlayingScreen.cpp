@@ -253,7 +253,6 @@ void UPlayingScreen::EndCountdown()
 	Texts[TimeTextIndex]->SetText(FText::FromString("TIME'S OUT"));
 }
 
-
 void UPlayingScreen::Reset()
 {
 	if(TargetImageIndex >= 0 && TargetImageIndex < Images.Num())
@@ -274,6 +273,7 @@ void UPlayingScreen::Reset()
 		{
 			const int Level = Gameplay->GetLevel() + 1;
 			SetLevel(Level);
+			SetLives(Gameplay->GetLives());
 			const_cast<UGameplay*>(Gameplay)->SetTime(Gameplay->GetTotalTimeLimit());
 		}
 	}
