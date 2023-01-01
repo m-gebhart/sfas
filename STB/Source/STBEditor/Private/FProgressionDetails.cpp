@@ -170,6 +170,7 @@ void FProgressionDetails::ShowSelectedLevel(IDetailLayoutBuilder& DetailBuilder,
 	const TSharedPtr<IPropertyHandle> LevelHandle = CachedLevelsHandle->GetElement(SelectedLevel);
 	const TSharedPtr<IPropertyHandle> BallBoundsHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, BallBounds));
 	const TSharedPtr<IPropertyHandle> RequiredDistanceHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, RequiredDistance));
+	const TSharedPtr<IPropertyHandle> TimeLimitHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, TimeLimit));
 	const TSharedPtr<IPropertyHandleArray> CharactersArrayHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, Characters))->AsArray();
 
 	uint32 NumElements;
@@ -178,6 +179,7 @@ void FProgressionDetails::ShowSelectedLevel(IDetailLayoutBuilder& DetailBuilder,
 	ShowSpacer(Category);
 	Category.AddProperty(BallBoundsHandle);
 	Category.AddProperty(RequiredDistanceHandle);
+	Category.AddProperty(TimeLimitHandle);
 	
 	for( uint32 Count = 0; Count < NumElements; ++Count)
 	{

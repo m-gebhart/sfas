@@ -125,6 +125,7 @@ void ASTBPlayerController::ContinueGame()
 		else
 		{
 			Gameplay->ChooseRandomBallLocation();
+			Gameplay->SetTime(Gameplay->GetTotalTimeLimit());
 		}
 	}	
 }
@@ -141,7 +142,7 @@ void ASTBPlayerController::ShowUI(ESTBGameMode State)
 	} 
 }
 
-const UGameplay* ASTBPlayerController::GetGameplay() const 
+const UGameplay* ASTBPlayerController::GetGameplay() const
 {
 	return Gameplay;
 }
@@ -215,7 +216,7 @@ void ASTBPlayerController::SetupScreen(ESTBGameMode State, TSubclassOf<UScreen> 
 
 void ASTBPlayerController::LeftRight(float Value)
 {
-	if(CurrentState == ESTBGameMode::Playing)
+	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver())
 	{
 		CurrentPlayerLocation.X = FMath::Clamp(CurrentPlayerLocation.X + Value*PlayerSpeed, 0, 1.f);
 	}
@@ -223,7 +224,7 @@ void ASTBPlayerController::LeftRight(float Value)
 
 void ASTBPlayerController::UpDown(float Value)
 {
-	if(CurrentState == ESTBGameMode::Playing)
+	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver())
 	{
 		CurrentPlayerLocation.Y = FMath::Clamp(CurrentPlayerLocation.Y + Value*PlayerSpeed, 0, 1.f);
 	}

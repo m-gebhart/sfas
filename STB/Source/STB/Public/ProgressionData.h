@@ -41,7 +41,10 @@ struct FProgressionLevelData
 	FBoxSphereBounds BallBounds;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float RequiredDistance;	
+	float RequiredDistance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float TimeLimit;	
 };
 
 UCLASS()

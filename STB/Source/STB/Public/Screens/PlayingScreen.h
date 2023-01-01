@@ -45,11 +45,23 @@ private:
 	void DoReveal(const bool bLastGuessCorrect);
 	void Reset();
 
+	UFUNCTION()
+	void StartCountdown();
+	
+	UFUNCTION()
+	void UpdateCountdown();
+
+	UFUNCTION()
+	void EndCountdown();
+
 	UPROPERTY(VisibleAnywhere)
 	FText LevelTextFormat;
 
 	UPROPERTY(VisibleAnywhere)
 	FText LivesTextFormat;
+
+	UPROPERTY(VisibleAnywhere)
+	FText TimeTextFormat;
 
 	UPROPERTY(VisibleAnywhere)
 	int TargetImageIndex;
@@ -62,6 +74,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	int LivesTextIndex;
+
+	UPROPERTY(VisibleAnywhere)
+	int TimeTextIndex;
 
 	UPROPERTY(VisibleAnywhere)
 	int PromptTextIndex;
@@ -83,4 +98,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	float MinimapPadding = 50.f;
+
+	UPROPERTY(VisibleAnywhere)
+	FTimerHandle CountdownTimerHandle;
 };

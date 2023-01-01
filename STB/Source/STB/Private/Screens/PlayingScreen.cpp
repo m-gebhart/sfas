@@ -23,14 +23,22 @@ void UPlayingScreen::NativeConstruct()
 			LevelTextFormat = Texts[Count]->Text;
 			LevelTextIndex = Count;
 		}
-		else if(Texts[Count]->GetName().Contains("Lives"))
+		
+		if(Texts[Count]->GetName().Contains("Lives"))
 		{
 			LivesTextFormat = Texts[Count]->Text;
 			LivesTextIndex = Count;
 		}
-		else if(Texts[Count]->GetName().Contains("Prompt"))
+		
+		if(Texts[Count]->GetName().Contains("Prompt"))
 		{
 			PromptTextIndex = Count;
+		}
+		
+		if(Texts[Count]->GetName().Contains("Time"))
+		{
+			TimeTextFormat = Texts[Count]->Text;
+			TimeTextIndex = Count;
 		}
 	}
 
@@ -91,6 +99,15 @@ void UPlayingScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 				GuessSlot->SetPosition(FVector2D(MinimapPadding + GuessLocation.X*MinimapSize.X, (MinimapSize.Y+MinimapPadding)-(GuessLocation.Y*MinimapSize.Y + MinimapPadding)));
 			}	
 		}
+
+		//Check Time
+		if(PlayingState == EPlayingState::Guessing)
+		{
+			if (const_cast<UGameplay*>(PlayerController->GetGameplay())->SubtractFromRemainingTime(InDeltaTime) < 0)
+			{
+				Select();
+			}
+		}
 	}	
 }
 
@@ -109,7 +126,7 @@ void UPlayingScreen::Select_Implementation()
 					SetLives(Lives);
 				}					
 			}
-
+			EndCountdown();
 			DoReveal(bCorrect);
 		}
 	}
@@ -122,7 +139,6 @@ void UPlayingScreen::Select_Implementation()
 void UPlayingScreen::Show(bool bShow)
 {
 	Super::Show(bShow);
-	SetMinimap();
 
 	if(bShow)
 	{
@@ -151,7 +167,7 @@ void UPlayingScreen::SetMinimap()
 	if (UCanvasPanelSlot* MinimapSlot = Cast<UCanvasPanelSlot>(Images[MinimapImageIndex]->Slot))
 	{
 		//Set Minimap Size
-		ASTBPlayerCameraManager* PlayerCameraManager = Cast<ASTBPlayerCameraManager>(PlayerController->PlayerCameraManager);
+		const ASTBPlayerCameraManager* PlayerCameraManager = Cast<ASTBPlayerCameraManager>(PlayerController->PlayerCameraManager);
 		MinimapSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY())*PlayerCameraManager->MinimapScale;
 		MinimapSlot->SetSize(MinimapSize + FVector2D(MinimapPadding*2));
 
@@ -214,6 +230,30 @@ void UPlayingScreen::DoReveal(const bool bLastGuessCorrect)
 	PlayingState = EPlayingState::Showing;
 }
 
+void UPlayingScreen::StartCountdown()
+{
+	GetWorld()->GetTimerManager().SetTimer(CountdownTimerHandle, this, &UPlayingScreen::UpdateCountdown, 0.1f, true, 0);
+}
+
+void UPlayingScreen::UpdateCountdown()
+{
+	const float TimeLeft = const_cast<UGameplay*>(PlayerController->GetGameplay())->GetRemainingTime();
+
+	FString SanitizedStr = FString::SanitizeFloat(round(TimeLeft*10)/10);
+	FString DecimalStr;
+	SanitizedStr.Split(".", &SanitizedStr, &DecimalStr);
+	const FString Result = SanitizedStr + "." + DecimalStr[0];
+				
+	Texts[TimeTextIndex]->SetText(FText::FromString(Result));
+}
+
+void UPlayingScreen::EndCountdown()
+{
+	GetWorld()->GetTimerManager().ClearTimer(CountdownTimerHandle);
+	Texts[TimeTextIndex]->SetText(FText::FromString("TIME'S OUT"));
+}
+
+
 void UPlayingScreen::Reset()
 {
 	if(TargetImageIndex >= 0 && TargetImageIndex < Images.Num())
@@ -234,8 +274,12 @@ void UPlayingScreen::Reset()
 		{
 			const int Level = Gameplay->GetLevel() + 1;
 			SetLevel(Level);
+			const_cast<UGameplay*>(Gameplay)->SetTime(Gameplay->GetTotalTimeLimit());
 		}
 	}
+
+	SetMinimap();
+	StartCountdown();
 
 	ShowLevel(true);
 	ShowLives(true);

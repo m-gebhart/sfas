@@ -31,6 +31,7 @@ void UGameplay::NextLevel()
 		{
 			CurrentBallBounds = LevelData->BallBounds;
 			CurrentRequiredDistance = LevelData->RequiredDistance;
+			SetTime(LevelData->TimeLimit);
 			ChooseRandomBallLocation();
 		}			
 	}
@@ -74,6 +75,35 @@ int UGameplay::GetLives() const
 bool UGameplay::GetWin() const
 {
 	return bWin;
+}
+
+float UGameplay::bIsTimeOver() const
+{
+	return CurrentTimeLeft < 0;
+}
+
+
+float UGameplay::GetTotalTimeLimit() const
+{
+	return CurrentTimeLimit;
+}
+
+
+float UGameplay::GetRemainingTime() const
+{
+	return CurrentTimeLeft;
+}
+
+void UGameplay::SetTime(float TimeLimit)
+{
+	CurrentTimeLimit = TimeLimit;
+	CurrentTimeLeft = CurrentTimeLimit;
+}
+
+float UGameplay::SubtractFromRemainingTime(float deltaTime)
+{
+	CurrentTimeLeft -= deltaTime;
+	return CurrentTimeLeft;
 }
 
 bool UGameplay::TryMove3D(const FVector& PlayerGuess3D, const FVector& BallLocation3D)

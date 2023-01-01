@@ -53,7 +53,22 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ChooseRandomBallLocation();
+
+	UFUNCTION(BlueprintCallable)
+	float GetTotalTimeLimit() const;
 	
+	UFUNCTION(BlueprintCallable)
+	float GetRemainingTime() const;
+
+	UFUNCTION(BlueprintCallable)
+	float bIsTimeOver() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetTime(float TimeLimit);
+	
+	UFUNCTION(BlueprintCallable)
+	float SubtractFromRemainingTime(float deltaTime);
+
 protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -79,6 +94,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	int CurrentLives;
+
+	UPROPERTY(VisibleAnywhere)
+	float CurrentTimeLeft;
+
+	UPROPERTY(VisibleAnywhere)
+	float CurrentTimeLimit;
 	
 	UPROPERTY(VisibleAnywhere)
 	bool bWin;
