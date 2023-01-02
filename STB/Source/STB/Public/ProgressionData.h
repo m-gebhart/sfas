@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/StaticMeshActor.h"
 #include "ProgressionData.generated.h"
 
 USTRUCT(BlueprintType)
@@ -30,6 +31,18 @@ struct FProgressionCharacterData
 };
 
 USTRUCT(BlueprintType)
+struct FProgressionStaticMeshData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadonly)
+	UStaticMesh* StaticMeshAsset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadonly)
+	TArray<UMaterial*> MeshAssetMaterials;
+};
+
+USTRUCT(BlueprintType)
 struct FProgressionLevelData
 {
 	GENERATED_BODY()
@@ -39,6 +52,9 @@ struct FProgressionLevelData
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FBoxSphereBounds BallBounds;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    FProgressionStaticMeshData GroundMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float RequiredDistance;
@@ -73,5 +89,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<AActor*> SpawnedActors;
-	
+
+	UPROPERTY(VisibleAnywhere)
+	AStaticMeshActor* GroundMesh;
 };

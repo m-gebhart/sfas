@@ -82,7 +82,6 @@ void ASTBPlayerController::Tick(float DeltaSeconds)
 	{
 		const auto Bounds = Gameplay->GetCurrentBallBounds();
 		PlayerPawn->MoveTo(CurrentPlayerLocation, Bounds);
-		DrawDebugBox(GetWorld(), Bounds.Origin, Bounds.BoxExtent, FColor::Green, false, 0.2f, SDPG_Foreground, 1.0f);		
 		DrawDebugSphere(GetWorld(), Gameplay->GetBallLocation(), Bounds.SphereRadius, 10.0f, FColor::Red, false, 0.2f, SDPG_Foreground, 1.0f);
 	}
 }
