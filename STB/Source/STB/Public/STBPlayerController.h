@@ -52,6 +52,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool TryMove();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
+	FVector OrbitPivot = FVector(0.0f, -50.0f, 125.0f);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
+	float OrbitRadius = 250.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
+	FRotator OrbitRotationOffset;
 	
 protected:
 
@@ -139,8 +147,6 @@ private:
 	
 	FVector LastOrbitPawnLocation;
 	FRotator LastOrbitPawnViewRotation;
-	FVector OrbitPivot = FVector(0.0f, 0.0f, 100.0f);
-	float OrbitRadius = 200.0f;
 	ESTBGameMode CurrentState;
 
 	static const FString TopButtonActionName;

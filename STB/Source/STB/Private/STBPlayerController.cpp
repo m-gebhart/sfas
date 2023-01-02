@@ -13,6 +13,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "STB/STBGameModes.h"
 
 const FString ASTBPlayerController::TopButtonActionName = TEXT("TopButton");
@@ -66,9 +67,10 @@ void ASTBPlayerController::UpdateRotation(float DeltaTime)
 		Rotation.Pitch += RotationInput.Pitch * AxisScale * DeltaTime;
 
 		LastOrbitPawnLocation = OrbitPivot + Rotation.Vector() * OrbitRadius;
-		LastOrbitPawnViewRotation = (OrbitPivot - LastOrbitPawnLocation).GetSafeNormal().Rotation();
-		CurrentPawn->SetActorLocationAndRotation(LastOrbitPawnLocation, LastOrbitPawnViewRotation);
-		SetControlRotation(Rotation);
+		LastOrbitPawnViewRotation = UKismetMathLibrary::FindLookAtRotation(PlayerCameraManager->GetCameraLocation(), Gameplay->GetCurrentBallBounds().Origin);
+		//LastOrbitPawnViewRotation = (OrbitPivot - LastOrbitPawnLocation).GetSafeNormal().Rotation();
+		//CurrentPawn->SetActorLocationAndRotation(LastOrbitPawnLocation, LastOrbitPawnViewRotation);
+		//SetControlRotation(Rotation);
 	}
 }
 
