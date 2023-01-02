@@ -171,11 +171,15 @@ void UPlayingScreen::SetMinimap()
 		MinimapSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY())*PlayerCameraManager->MinimapScale;
 		MinimapSlot->SetSize(MinimapSize + FVector2D(MinimapPadding*2));
 
+		//reset color of target image
+		Images[TargetImageIndex]->SetBrushTintColor(FColor::White);
+		
 		//Attach Level Text right below Minimap
 		if (UCanvasPanelSlot* LevelTextSlot = Cast<UCanvasPanelSlot>(Texts[LevelTextIndex]->Slot))
 		{
 			LevelTextSlot->SetPosition(FVector2D(LevelTextSlot->GetPosition().X, MinimapSize.Y));
 		}
+
 	}
 }
 
