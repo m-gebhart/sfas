@@ -254,7 +254,7 @@ void UPlayingScreen::UpdateCountdown()
 void UPlayingScreen::EndCountdown()
 {
 	GetWorld()->GetTimerManager().ClearTimer(CountdownTimerHandle);
-	Texts[TimeTextIndex]->SetText(FText::FromString("TIME'S OUT"));
+	Texts[TimeTextIndex]->SetText(PlayerController->GetGameplay()->GetWin() ? FText::FromString("SUCCESS!") : FText::FromString("TIME'S OUT"));
 }
 
 void UPlayingScreen::Reset()
