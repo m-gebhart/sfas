@@ -137,7 +137,7 @@ void UGameplay::ChooseRandomBallLocation()
 	BallLocation = CurrentBallBounds.Origin;
 	BallLocation.X += FMath::RandRange( -CurrentBallBounds.BoxExtent.X, CurrentBallBounds.BoxExtent.X );
 	BallLocation.Y += FMath::RandRange( -CurrentBallBounds.BoxExtent.Y, CurrentBallBounds.BoxExtent.Y );
-	BallLocation.Z += FMath::RandRange( -CurrentBallBounds.BoxExtent.Z, CurrentBallBounds.BoxExtent.Z );
+	BallLocation.Z = CurrentBallBounds.BoxExtent.Z;
 	
 	Levels->GetTargetSightActor()->SetActorLocation(BallLocation);
 }
