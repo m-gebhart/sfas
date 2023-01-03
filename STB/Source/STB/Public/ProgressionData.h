@@ -57,6 +57,9 @@ struct FProgressionLevelData
     FProgressionStaticMeshData GroundMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    FProgressionStaticMeshData TargetSightMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float RequiredDistance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -74,7 +77,8 @@ public:
 
 	const FProgressionLevelData* SpawnLevel(int32 Level);
 	void CleanupLevel();
-	int GetNumLevels() const; 
+	int GetNumLevels() const;
+	AStaticMeshActor* GetTargetSightActor() const;
 
 protected:
 
@@ -92,4 +96,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	AStaticMeshActor* GroundMesh;
+
+	UPROPERTY(VisibleAnywhere)
+	AStaticMeshActor* TargetSightMesh;
 };

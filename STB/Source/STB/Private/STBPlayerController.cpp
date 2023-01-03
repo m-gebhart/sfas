@@ -80,9 +80,7 @@ void ASTBPlayerController::Tick(float DeltaSeconds)
 
 	if(IsValid(Gameplay) && CurrentState == ESTBGameMode::Playing)
 	{
-		const auto Bounds = Gameplay->GetCurrentBallBounds();
-		PlayerPawn->MoveTo(CurrentPlayerLocation, Bounds);
-		DrawDebugSphere(GetWorld(), Gameplay->GetBallLocation(), Bounds.SphereRadius, 10.0f, FColor::Red, false, 0.2f, SDPG_Foreground, 1.0f);
+		PlayerPawn->MoveTo(CurrentPlayerLocation, Gameplay->GetCurrentBallBounds());
 	}
 }
 
@@ -126,6 +124,7 @@ void ASTBPlayerController::ContinueGame()
 		else
 		{
 			Gameplay->ChooseRandomBallLocation();
+			
 			Gameplay->SetTime(Gameplay->GetTotalTimeLimit());
 		}
 	}	

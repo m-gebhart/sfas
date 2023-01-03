@@ -2,8 +2,11 @@
 
 #include "ProgressionData.h"
 
+#include "Gameplay.h"
+#include "STBPlayerController.h"
 #include "Components/BoxComponent.h"
 #include "Engine/StaticMeshActor.h"
+#include "Kismet/GameplayStatics.h"
 
 AProgressionData::AProgressionData()
 {
@@ -12,6 +15,8 @@ AProgressionData::AProgressionData()
 const FProgressionLevelData* AProgressionData::SpawnLevel(int32 Level)
 {
 	FProgressionLevelData* LevelData = nullptr;
+
+	UE_LOG(LogTemp, Warning, TEXT("Spawning... %d"), Level);
 
 	if(Level >= 0 && Levels.Num() > Level)
 	{
@@ -24,17 +29,43 @@ const FProgressionLevelData* AProgressionData::SpawnLevel(int32 Level)
 		{
 			GroundMesh->SetMobility(EComponentMobility::Movable);
 			if (LevelData->GroundMesh.StaticMeshAsset)
+			{
 				GroundMesh->GetStaticMeshComponent()->SetStaticMesh(LevelData->GroundMesh.StaticMeshAsset);
+			}
 			if (!LevelData->GroundMesh.MeshAssetMaterials.IsEmpty())
-				GroundMesh->GetStaticMeshComponent()->SetMaterial(0, LevelData->GroundMesh.MeshAssetMaterials[0]);
+			{
+				for (int MatCount = 0; MatCount < LevelData->GroundMesh.MeshAssetMaterials.Num(); MatCount++)
+				{
+					GroundMesh->GetStaticMeshComponent()->SetMaterial(MatCount, LevelData->GroundMesh.MeshAssetMaterials[MatCount]);
+				}
+			}
 			
 			FVector GroundBounds;
 			FVector GroundOrigin;
 			GroundMesh->GetActorBounds(false, GroundOrigin, GroundBounds, false);
 			GroundMesh->SetActorScale3D((FVector::One()/GroundBounds) * LevelData->BallBounds.BoxExtent);
 		}
+
+		//Spawn Ball = Target Sight to get
+		const FVector SightSpawnLocation = Cast<ASTBPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0))->GetGameplay()->GetBallLocation();
+		TargetSightMesh = GetWorld()->SpawnActor<AStaticMeshActor>(SightSpawnLocation, FRotator::ZeroRotator, SpawnParameters);
+		if(TargetSightMesh)
+		{
+			TargetSightMesh->SetMobility(EComponentMobility::Movable);
+			if (LevelData->TargetSightMesh.StaticMeshAsset)
+			{
+				TargetSightMesh->GetStaticMeshComponent()->SetStaticMesh(LevelData->TargetSightMesh.StaticMeshAsset);
+			}
+			if (!LevelData->GroundMesh.MeshAssetMaterials.IsEmpty())
+			{
+				for (int MatCount = 0; MatCount < LevelData->TargetSightMesh.MeshAssetMaterials.Num(); MatCount++)
+				{
+					TargetSightMesh->GetStaticMeshComponent()->SetMaterial(MatCount, LevelData->TargetSightMesh.MeshAssetMaterials[MatCount]);
+				}
+			}
+		}
+
 		
-		//Spawn Sights
 		//Spawn Enemies
 		
 		//Spawn Character
@@ -85,9 +116,18 @@ void AProgressionData::CleanupLevel()
 	}
 
 	SpawnedActors.Empty();
+	if (GroundMesh)
+		GroundMesh->Destroy();
+	if (TargetSightMesh)
+		TargetSightMesh->Destroy();
 }
 
 int AProgressionData::GetNumLevels() const
 {
 	return Levels.Num();
+}
+
+AStaticMeshActor* AProgressionData::GetTargetSightActor() const
+{
+	return TargetSightMesh;
 }

@@ -171,7 +171,8 @@ void FProgressionDetails::ShowSelectedLevel(IDetailLayoutBuilder& DetailBuilder,
 	const TSharedPtr<IPropertyHandle> BallBoundsHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, BallBounds));
 	const TSharedPtr<IPropertyHandle> RequiredDistanceHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, RequiredDistance));
 	const TSharedPtr<IPropertyHandle> TimeLimitHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, TimeLimit));
-	const TSharedPtr<IPropertyHandle> GroundMeshHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, GroundMesh));
+	const TSharedPtr<IPropertyHandle> GroundStaticMeshActorHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, GroundMesh));
+	const TSharedPtr<IPropertyHandle> TargetMeshActorHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, TargetSightMesh));
 	const TSharedPtr<IPropertyHandleArray> CharactersArrayHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, Characters))->AsArray();
 
 	uint32 NumElements;
@@ -181,11 +182,8 @@ void FProgressionDetails::ShowSelectedLevel(IDetailLayoutBuilder& DetailBuilder,
 	Category.AddProperty(BallBoundsHandle);
 	Category.AddProperty(RequiredDistanceHandle);
 	Category.AddProperty(TimeLimitHandle);
-
-	const TSharedPtr<IPropertyHandle> GroundMeshAssetHandle = GroundMeshHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionStaticMeshData, StaticMeshAsset));
-	Category.AddProperty(GroundMeshHandle);
-	const TSharedPtr<IPropertyHandle> GroundMaterialHandle = GroundMeshHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionStaticMeshData, MeshAssetMaterials));
-	Category.AddProperty(GroundMaterialHandle);
+	Category.AddProperty(GroundStaticMeshActorHandle);
+	Category.AddProperty(TargetMeshActorHandle);
 	
 	for( uint32 Count = 0; Count < NumElements; ++Count)
 	{
