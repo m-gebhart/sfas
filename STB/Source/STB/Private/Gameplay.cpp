@@ -121,7 +121,7 @@ bool UGameplay::TryMove(const FVector2D& PlayerGuess, const FVector2D& BallLocat
 	
 	if(Distance <= CurrentRequiredDistance)
 	{
-		CurrentLevel = FMath::Clamp(CurrentLevel + 1, 0, Levels->GetNumLevels());
+		CurrentLevel = FMath::Clamp(CurrentLevel + 1, 0, Levels->GetNumLevels()-1);
 		bWin = true;
 	}
 	else
