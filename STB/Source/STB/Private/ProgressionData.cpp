@@ -43,7 +43,7 @@ const FProgressionLevelData* AProgressionData::SpawnLevel(int32 Level)
 			FVector GroundBounds;
 			FVector GroundOrigin;
 			GroundMesh->GetActorBounds(false, GroundOrigin, GroundBounds, false);
-			GroundMesh->SetActorScale3D((FVector::One()/GroundBounds) * LevelData->BallBounds.BoxExtent);
+			GroundMesh->SetActorScale3D((FVector::One()/GroundBounds) * LevelData->BallBounds.BoxExtent * LevelData->GroundMesh.StaticMeshScale);
 		}
 
 		//Spawn Ball = Target Sight to get
@@ -55,6 +55,7 @@ const FProgressionLevelData* AProgressionData::SpawnLevel(int32 Level)
 			if (LevelData->TargetSightMesh.StaticMeshAsset)
 			{
 				TargetSightMesh->GetStaticMeshComponent()->SetStaticMesh(LevelData->TargetSightMesh.StaticMeshAsset);
+				TargetSightMesh->SetActorScale3D(FVector(LevelData->TargetSightMesh.StaticMeshScale));
 			}
 			if (!LevelData->GroundMesh.MeshAssetMaterials.IsEmpty())
 			{
