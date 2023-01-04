@@ -90,6 +90,7 @@ void ASTBPlayerController::CreateUI()
 	SetupScreen(ESTBGameMode::Intro, IntroClass, TEXT("Intro"));
 	SetupScreen(ESTBGameMode::MainMenu, MenuClass, TEXT("MainMenu"));
 	SetupScreen(ESTBGameMode::Settings, SettingsClass, TEXT("Settings"));
+	SetupScreen(ESTBGameMode::Credits, CreditsClass, TEXT("Credits"));
 	SetupScreen(ESTBGameMode::Playing, PlayingClass, TEXT("Playing"));
 	SetupScreen(ESTBGameMode::GameOver, GameOverClass, TEXT("GameOver"));
 	SetupScreen(ESTBGameMode::Outro, OutroClass, TEXT("Outro"));

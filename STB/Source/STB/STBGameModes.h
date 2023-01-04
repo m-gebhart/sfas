@@ -8,6 +8,7 @@ enum class ESTBGameMode : uint8
 	Intro,
 	MainMenu,
 	Settings,
+	Credits,
 	Playing,
 	GameOver,
 	Outro,

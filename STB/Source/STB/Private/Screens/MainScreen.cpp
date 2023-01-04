@@ -28,3 +28,16 @@ void UMainScreen::Alt2_Implementation()
 		PlayerController->ShowUI(ESTBGameMode::Outro);
 	}
 }
+
+void UMainScreen::Special1_Implementation()
+{
+	if(IsValid(PlayerController))
+	{
+		PlayerController->ShowUI(ESTBGameMode::Credits);
+	}
+}
+
+void UMainScreen::Special2_Implementation()
+{
+	UMainScreen::Special1_Implementation();
+}
