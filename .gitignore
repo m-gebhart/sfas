@@ -62,5 +62,6 @@ Thumbs.db
 /STB/Intermediate/ProjectFiles/*.user
 /STB/Intermediate/ProjectFiles/*.filters
 /STB/Intermediate/ProjectFiles/.Rider/
+/STB/Intermediate/ProjectFiles/
 /STB/Intermediate/*.json
 /STB/Intermediate/*.bin
