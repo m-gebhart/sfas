@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ProgressionData.h"
 #include "GameFramework/DefaultPawn.h"
 #include "STBPawn.generated.h"
 
@@ -16,9 +17,26 @@ public:
 	ASTBPawn();
 
 	void MoveTo(FVector2D Coord, const FBoxSphereBounds &LevelBounds);
+	void ShowBeamUp();
+	void EndBeamUp();
 
-	UPROPERTY(EditAnywhere, Category="Moevment")
+	UPROPERTY(EditAnywhere, Category="Movement")
 	float MovementHeight = 100.f;
+
+	UPROPERTY(EditAnywhere, Category="Movement")
+	float BeamUpSpeed = 3.f;
+
+	UPROPERTY(EditAnywhere, Category="Movement")
+	bool bTargetAcquired = false;
+
+	UPROPERTY(VisibleAnywhere, Category="Movement")
+	bool bMovementLocked = false;
+
+protected:
+	virtual void BeginPlay() override;
+
+private:
 	
-	//void AddMovementInput(FVector WorldDirection, float ScaleValue, bool bForce) override;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* ShowingBeamComp;
 };

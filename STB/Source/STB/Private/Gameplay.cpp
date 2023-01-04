@@ -67,6 +67,11 @@ int UGameplay::GetLevel() const
 	return CurrentLevel;
 }
 
+AProgressionData* UGameplay::GetLevelData() const
+{
+	return Levels;
+}
+
 int UGameplay::GetLives() const
 {
 	return CurrentLives;

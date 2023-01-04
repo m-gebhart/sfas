@@ -40,6 +40,9 @@ public:
 	int GetLevel() const;
 
 	UFUNCTION(BlueprintCallable)
+	AProgressionData* GetLevelData() const;
+
+	UFUNCTION(BlueprintCallable)
 	int GetLives() const;
 
 	UFUNCTION(BlueprintCallable)
@@ -75,8 +78,7 @@ protected:
 	int StartingLives = 3;
 	
 private:
-
-
+	
 	UPROPERTY(VisibleAnywhere)
 	AProgressionData * Levels;
 

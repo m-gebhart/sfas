@@ -172,6 +172,21 @@ bool ASTBPlayerController::TryMove()
 	return Gameplay->TryMove3D(PlayerPawn->GetActorLocation(), Gameplay->GetBallLocation());
 }
 
+bool ASTBPlayerController::bIsTargetCaptured()
+{
+	if (GetPlayerPawn() && GetGameplay() && GetGameplay()->GetLevelData()->GetTargetSightActor())
+	{
+		return GetPlayerPawn()->MovementHeight < GetGameplay()->GetLevelData()->GetTargetSightActor()->GetActorLocation().Z;
+	}
+	return false;
+}
+
+
+ASTBPawn* ASTBPlayerController::GetPlayerPawn() const
+{
+	return PlayerPawn;
+}
+
 void ASTBPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -217,7 +232,7 @@ void ASTBPlayerController::SetupScreen(ESTBGameMode State, TSubclassOf<UScreen> 
 
 void ASTBPlayerController::LeftRight(float Value)
 {
-	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver())
+	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && !PlayerPawn->bMovementLocked)
 	{
 		CurrentPlayerLocation.X = FMath::Clamp(CurrentPlayerLocation.X + Value*PlayerSpeed, 0, 1.f);
 	}
@@ -225,7 +240,7 @@ void ASTBPlayerController::LeftRight(float Value)
 
 void ASTBPlayerController::UpDown(float Value)
 {
-	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver())
+	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && !PlayerPawn->bMovementLocked)
 	{
 		CurrentPlayerLocation.Y = FMath::Clamp(CurrentPlayerLocation.Y + Value*PlayerSpeed, 0, 1.f);
 	}

@@ -70,9 +70,16 @@ void UPlayingScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	
 	if(IsValid(PlayerController))
 	{
-		//Fade In Animation after Guess
 		if(PlayingState == EPlayingState::Showing)
 		{
+			//Beam Up of Sight
+			if(!PlayerController->bIsTargetCaptured())
+			{
+				const FVector CurrentTargetLocation = PlayerController->GetGameplay()->GetLevelData()->GetTargetSightActor()->GetActorLocation();
+				PlayerController->GetGameplay()->GetLevelData()->GetTargetSightActor()->SetActorLocation(CurrentTargetLocation + FVector(0.0f, 0.0f, InDeltaTime*PlayerController->GetPlayerPawn()->BeamUpSpeed));
+			}
+			
+			//Fade In Animation of Target Icon and Fade Out animation of Guess Icon on Minimap
 			if(TargetImageIndex >= 0 && TargetImageIndex < Images.Num())
 			{
 				Images[TargetImageIndex]->SetOpacity(FMath::Clamp(Images[TargetImageIndex]->ColorAndOpacity.A + InDeltaTime, 0.0f, 1.0f));
@@ -83,9 +90,10 @@ void UPlayingScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 				}
 
 				//Fully Faded In
-				if(Images[TargetImageIndex]->ColorAndOpacity.A >= 1.0f)
+				if(Images[TargetImageIndex]->ColorAndOpacity.A >= 1.0f && PlayerController->bIsTargetCaptured())
 				{
 					PlayingState = EPlayingState::Shown;
+					PlayerController->GetPlayerPawn()->EndBeamUp();
 				}
 			}
 		}
@@ -231,6 +239,7 @@ void UPlayingScreen::DoReveal(const bool bLastGuessCorrect)
 	ShowLevel(false);
 	ShowLives(false);
 	ShowPrompt(true);
+	PlayerController->GetPlayerPawn()->ShowBeamUp();
 	PlayingState = EPlayingState::Showing;
 }
 
@@ -241,7 +250,7 @@ void UPlayingScreen::StartCountdown()
 
 void UPlayingScreen::UpdateCountdown()
 {
-	const float TimeLeft = const_cast<UGameplay*>(PlayerController->GetGameplay())->GetRemainingTime();
+	const float TimeLeft = PlayerController->GetGameplay()->GetRemainingTime();
 
 	FString SanitizedStr = FString::SanitizeFloat(round(TimeLeft*10)/10);
 	FString DecimalStr;
@@ -261,7 +270,7 @@ void UPlayingScreen::Reset()
 {
 	if(TargetImageIndex >= 0 && TargetImageIndex < Images.Num())
 	{
-		Images[TargetImageIndex]->SetOpacity(1.0f);
+		Images[TargetImageIndex]->SetOpacity(0.0f);
 	}
 
 	if(GuessImageIndex >= 0 && GuessImageIndex < Images.Num())

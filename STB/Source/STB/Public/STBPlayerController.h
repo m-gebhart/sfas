@@ -52,6 +52,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool TryMove();
 
+	UFUNCTION(BlueprintCallable)
+	bool bIsTargetCaptured();
+
+	UFUNCTION(BlueprintCallable)
+	ASTBPawn* GetPlayerPawn() const;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
 	FVector OrbitPivot = FVector(0.0f, -50.0f, 125.0f);
 
