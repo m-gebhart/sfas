@@ -55,7 +55,7 @@ const FProgressionLevelData* AProgressionData::SpawnLevel(int32 Level)
 			if (LevelData->TargetSightMesh.StaticMeshAsset)
 			{
 				TargetSightMesh->GetStaticMeshComponent()->SetStaticMesh(LevelData->TargetSightMesh.StaticMeshAsset);
-				TargetSightMesh->SetActorScale3D(FVector(LevelData->TargetSightMesh.StaticMeshScale));
+				TargetSightMesh->SetActorScale3D(LevelData->TargetSightMesh.StaticMeshScale);
 			}
 			if (!LevelData->GroundMesh.MeshAssetMaterials.IsEmpty())
 			{

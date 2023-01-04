@@ -39,7 +39,7 @@ struct FProgressionStaticMeshData
 	UStaticMesh* StaticMeshAsset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadonly)
-	float StaticMeshScale = 1.0f;
+	FVector StaticMeshScale = {1.0f, 1.0f, 1.0f};
 
 	UPROPERTY(EditAnywhere, BlueprintReadonly)
 	TArray<UMaterial*> MeshAssetMaterials;
