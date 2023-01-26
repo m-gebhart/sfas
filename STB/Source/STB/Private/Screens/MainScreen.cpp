@@ -6,7 +6,7 @@
 
 void UMainScreen::Select_Implementation()
 {
-	if(IsValid(PlayerController))
+	if(IsValid(PlayerController) && State != EScreenState::AnimatingOn)
 	{
 		PlayerController->BeginNewGame();
 		PlayerController->ShowUI(ESTBGameMode::Playing);
