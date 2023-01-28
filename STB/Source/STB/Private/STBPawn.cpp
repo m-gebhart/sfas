@@ -43,7 +43,6 @@ void ASTBPawn::EndBeamUp()
 {
 	if (ShowingBeamComp)
 	{
-		bMovementLocked = false;
 		ShowingBeamComp->SetVisibility(false);
 	}
 }

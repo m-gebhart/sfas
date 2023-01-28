@@ -116,6 +116,7 @@ void ASTBPlayerController::ContinueGame()
 
 		if(Gameplay->GetWin())
 		{
+			PlayerPawn->bMovementLocked = false;
 			Gameplay->NextLevel();
 		}
 		else if(Gameplay->GetLives() <= 0)

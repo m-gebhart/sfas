@@ -9,6 +9,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
 #include "Screens/SettingsScreen.h"
 
 
@@ -70,23 +71,25 @@ void UPlayingScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	
 	if(IsValid(PlayerController))
 	{
+		//Show Animation after confirming guess (do reveal)
 		if(PlayingState == EPlayingState::Showing)
 		{
-			//Beam Up of Sight
+			//Beam Up of Sight (Target)
 			if(!PlayerController->bIsTargetCaptured())
 			{
-				const FVector CurrentTargetLocation = PlayerController->GetGameplay()->GetLevelData()->GetTargetSightActor()->GetActorLocation();
-				PlayerController->GetGameplay()->GetLevelData()->GetTargetSightActor()->SetActorLocation(CurrentTargetLocation + FVector(0.0f, 0.0f, InDeltaTime*PlayerController->GetPlayerPawn()->BeamUpSpeed));
+				static const float TotalDistance = PlayerController->GetPlayerPawn()->GetActorLocation().Z - PlayerController->GetGameplay()->GetBallLocation().Z;
+				FVector CurrentBeamingSightLocation = FVector(PlayerController->GetGameplay()->GetLevelData()->GetTargetSightActor()->GetActorLocation() + FVector(0, 0, TotalDistance / PlayerController->GetPlayerPawn()->BeamUpSpeed*InDeltaTime));
+				PlayerController->GetGameplay()->GetLevelData()->GetTargetSightActor()->SetActorLocation(CurrentBeamingSightLocation);
 			}
 			
-			//Fade In Animation of Target Icon and Fade Out animation of Guess Icon on Minimap
+			//Fade In Animation of Target Icon and Fade Out Animation of Guess Icon on Minimap
 			if(TargetImageIndex >= 0 && TargetImageIndex < Images.Num())
 			{
 				Images[TargetImageIndex]->SetOpacity(FMath::Clamp(Images[TargetImageIndex]->ColorAndOpacity.A + InDeltaTime, 0.0f, 1.0f));
 
 				if(GuessImageIndex >= 0 && GuessImageIndex < Images.Num())
 				{
-					Images[GuessImageIndex]->SetOpacity(1.0f - Images[TargetImageIndex]->ColorAndOpacity.A);
+					Images[GuessImageIndex]->SetOpacity(1.0f - Images[TargetImageIndex]->ColorAndOpacity.A/2.f);
 				}
 
 				//Fully Faded In

@@ -15,9 +15,7 @@ AProgressionData::AProgressionData()
 const FProgressionLevelData* AProgressionData::SpawnLevel(int32 Level)
 {
 	FProgressionLevelData* LevelData = nullptr;
-
-	UE_LOG(LogTemp, Warning, TEXT("Spawning... %d"), Level);
-
+	
 	if(Level >= 0 && Levels.Num() > Level)
 	{
 		LevelData = &Levels[Level];
