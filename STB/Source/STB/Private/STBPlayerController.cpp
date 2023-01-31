@@ -3,6 +3,8 @@
 
 #include "STBPlayerController.h"
 
+#include <windows/PxWindowsIntrinsics.h>
+
 #include "EngineUtils.h"
 #include "ProgressionData.h"
 #include "Gameplay.h"
@@ -102,6 +104,7 @@ void ASTBPlayerController::BeginNewGame()
 	if(Gameplay != nullptr)
 	{
 		CurrentPlayerLocation = FVector2D::ZeroVector;
+		CurrentAcceleration = FVector2D::ZeroVector;
 		PlayerPawn = dynamic_cast<ASTBPawn*>(GetPawn());
 		Gameplay->StartNewGame();
 		Gameplay->NextLevel();
@@ -113,10 +116,11 @@ void ASTBPlayerController::ContinueGame()
 	if(Gameplay != nullptr)
 	{
 		CurrentPlayerLocation = FVector2D::ZeroVector;
+		CurrentAcceleration = FVector2D::ZeroVector;
+		PlayerPawn->bMovementLocked = false;
 
 		if(Gameplay->GetWin())
 		{
-			PlayerPawn->bMovementLocked = false;
 			Gameplay->NextLevel();
 		}
 		else if(Gameplay->GetLives() <= 0)
@@ -182,7 +186,6 @@ bool ASTBPlayerController::bIsTargetCaptured()
 	return false;
 }
 
-
 ASTBPawn* ASTBPlayerController::GetPlayerPawn() const
 {
 	return PlayerPawn;
@@ -235,7 +238,9 @@ void ASTBPlayerController::LeftRight(float Value)
 {
 	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && !PlayerPawn->bMovementLocked)
 	{
-		CurrentPlayerLocation.X = FMath::Clamp(CurrentPlayerLocation.X + Value*PlayerSpeed, 0, 1.f);
+		CurrentPlayerLocation.X = FMath::Clamp(
+			CurrentPlayerLocation.X + PlayerPawn->GetAcceleratedLocation(MoveDirection.X, Value, CurrentAcceleration.X, UGameplayStatics::GetWorldDeltaSeconds(GetWorld())),
+			0, 1.f);
 	}
 }
 
@@ -243,7 +248,9 @@ void ASTBPlayerController::UpDown(float Value)
 {
 	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && !PlayerPawn->bMovementLocked)
 	{
-		CurrentPlayerLocation.Y = FMath::Clamp(CurrentPlayerLocation.Y + Value*PlayerSpeed, 0, 1.f);
+		CurrentPlayerLocation.Y = FMath::Clamp(
+			CurrentPlayerLocation.Y + PlayerPawn->GetAcceleratedLocation(MoveDirection.Y, Value, CurrentAcceleration.Y, UGameplayStatics::GetWorldDeltaSeconds(GetWorld())),
+			0, 1.f);
 	}
 }
 

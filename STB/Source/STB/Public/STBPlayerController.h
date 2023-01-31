@@ -57,7 +57,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	ASTBPawn* GetPlayerPawn() const;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
 	FVector OrbitPivot = FVector(0.0f, -50.0f, 125.0f);
 
@@ -110,9 +110,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
 	float RadiusScale = 10.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
-	float PlayerSpeed = 0.01f;
 	
 private:
 
@@ -153,6 +150,15 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	FVector2D CurrentPlayerLocation;	
+	
+    UPROPERTY(VisibleAnywhere)
+    FVector2D CurrentAcceleration;
+
+	UPROPERTY(VisibleAnywhere)
+	FVector2D MoveDirection;
+
+	UPROPERTY(VisibleAnywhere)
+	float AccelerationValue;
 	
 	FVector LastOrbitPawnLocation;
 	FRotator LastOrbitPawnViewRotation;

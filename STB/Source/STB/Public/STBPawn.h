@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ProgressionData.h"
 #include "GameFramework/DefaultPawn.h"
 #include "STBPawn.generated.h"
 
@@ -19,18 +18,31 @@ public:
 	void MoveTo(FVector2D Coord, const FBoxSphereBounds &LevelBounds);
 	void ShowBeamUp();
 	void EndBeamUp();
+	float GetAcceleratedLocation(double& InputDirection, float InputValue, double& CurrentAcceleration, float DeltaTime);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	float PlayerSpeed = 0.01f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float Acceleration = 1.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float Deceleration = 0.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float BrakeDeceleration = 1.f;
 
 	UPROPERTY(EditAnywhere, Category="Movement")
 	float MovementHeight = 100.f;
 
-	UPROPERTY(EditAnywhere, Category="Movement")
-	float BeamUpSpeed = 3.f;
-
-	UPROPERTY(EditAnywhere, Category="Movement")
-	bool bTargetAcquired = false;
-
 	UPROPERTY(VisibleAnywhere, Category="Movement")
 	bool bMovementLocked = false;
+	
+	UPROPERTY(EditAnywhere, Category="Gameplay")
+	float BeamUpSpeed = 3.f;
+
+	UPROPERTY(EditAnywhere, Category="Gameplay")
+	bool bTargetAcquired = false;
 
 protected:
 	virtual void BeginPlay() override;
