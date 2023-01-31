@@ -39,14 +39,42 @@ void ASTBPawn::MoveTo(FVector2D Coord, const FBoxSphereBounds &LevelBounds)
 	}
 }
 
-void ASTBPawn::UpdateAnimation(float DeltaTime)
+void ASTBPawn::UpdateAnimation(float DeltaTime, FVector2D Input2D)
 {
+	/*Constant spinning of saucer*/
 	if (RotatingComponent)
 	{
 		RotatingComponent->AddRelativeRotation(FRotator(0., SpinningRate*DeltaTime, 0.f));
 	}
-}
 
+	/*TILT ANIMATION WHEN MOVING*/
+	/*Default: as if no buttons are pressed*/
+	float RollTiltSpeed = DecelerationTiltSpeed;
+	float RollInterpTarget = 0;
+
+	/*If buttons for horizontal movement are pressed*/
+	if (Input2D.X > 0.1f || Input2D.X < -0.1f)
+	{
+		RollInterpTarget = FMath::Sign(Input2D.X)*TiltAngle*(-1);
+		RollTiltSpeed = AccelerationTiltSpeed;
+	}
+	
+	/*Default: as if no buttons are pressed*/
+	float PitchTiltSpeed = DecelerationTiltSpeed;
+	float PitchInterpTarget = 0;
+
+	/*If buttons for vertical movement are pressed*/
+	if(Input2D.Y > 0.1f || Input2D.Y < -0.1f)
+	{
+		PitchInterpTarget = FMath::Sign(Input2D.Y)*TiltAngle;
+		PitchTiltSpeed = AccelerationTiltSpeed;
+	}
+
+	SetActorRotation(FRotator(
+		FMath::FInterpTo(GetActorRotation().Pitch, PitchInterpTarget, DeltaTime, PitchTiltSpeed),
+		GetActorRotation().Yaw,
+		FMath::FInterpTo(GetActorRotation().Roll, RollInterpTarget, DeltaTime, RollTiltSpeed)));
+}
 
 //Called by PlayerController to calculate new position (PC's Tick() will call MoveTo() and will refer to that new pos)
 float ASTBPawn::GetAcceleratedLocation(double& InputDirection, float InputValue, double& CurrentAcceleration, float DeltaTime)
@@ -68,6 +96,7 @@ float ASTBPawn::GetAcceleratedLocation(double& InputDirection, float InputValue,
 	}
 	else if (FMath::Sign(CurrentAcceleration) == InputDirection)
 	{
+		InputDirection = 0;
 		//if no button is pressed, decelerate based on momentum
 		CurrentAcceleration -= Deceleration*InputDirection*DeltaTime;
 	}
