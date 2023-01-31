@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/DefaultPawn.h"
+#include "GameFramework/RotatingMovementComponent.h"
 #include "STBPawn.generated.h"
 
 UCLASS()
@@ -19,6 +20,7 @@ public:
 	void ShowBeamUp();
 	void EndBeamUp();
 	float GetAcceleratedLocation(double& InputDirection, float InputValue, double& CurrentAcceleration, float DeltaTime);
+	void UpdateAnimation(float DeltaTime);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
 	float PlayerSpeed = 0.01f;
@@ -37,6 +39,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category="Movement")
 	bool bMovementLocked = false;
+
+	UPROPERTY(VisibleAnywhere, Category="Animation")
+	float SpinningRate = 15.f;
 	
 	UPROPERTY(EditAnywhere, Category="Gameplay")
 	float BeamUpSpeed = 3.f;
@@ -46,8 +51,10 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
+	
 private:
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* RotatingComponent;
 	
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* ShowingBeamComp;

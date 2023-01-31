@@ -3,6 +3,8 @@
 
 #include "STBPawn.h"
 
+#include "Kismet/GameplayStatics.h"
+
 ASTBPawn::ASTBPawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -10,9 +12,18 @@ ASTBPawn::ASTBPawn()
 
 void ASTBPawn::BeginPlay()
 {
-	ShowingBeamComp = Cast<UStaticMeshComponent>(GetComponentsByTag(UStaticMeshComponent::StaticClass(), "Showing")[0]);
-	if (ShowingBeamComp)
+	UActorComponent* SaucerMeshComp = GetComponentsByTag(UStaticMeshComponent::StaticClass(), "Saucer")[0];
+	if (SaucerMeshComp)
+	{
+		RotatingComponent = Cast<UStaticMeshComponent>(SaucerMeshComp);
+	}
+
+	UActorComponent* BeamMeshComp = GetComponentsByTag(UStaticMeshComponent::StaticClass(), "Showing")[0];
+	if (BeamMeshComp)
+	{
+		ShowingBeamComp = Cast<UStaticMeshComponent>(BeamMeshComp);
 		ShowingBeamComp->SetVisibility(false);
+	}
 }
 
 void ASTBPawn::MoveTo(FVector2D Coord, const FBoxSphereBounds &LevelBounds)
@@ -27,6 +38,15 @@ void ASTBPawn::MoveTo(FVector2D Coord, const FBoxSphereBounds &LevelBounds)
 		SetActorLocation(Location);
 	}
 }
+
+void ASTBPawn::UpdateAnimation(float DeltaTime)
+{
+	if (RotatingComponent)
+	{
+		RotatingComponent->AddRelativeRotation(FRotator(0., SpinningRate*DeltaTime, 0.f));
+	}
+}
+
 
 //Called by PlayerController to calculate new position (PC's Tick() will call MoveTo() and will refer to that new pos)
 float ASTBPawn::GetAcceleratedLocation(double& InputDirection, float InputValue, double& CurrentAcceleration, float DeltaTime)
