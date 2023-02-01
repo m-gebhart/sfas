@@ -83,7 +83,7 @@ void ASTBPlayerController::Tick(float DeltaSeconds)
 	if(IsValid(Gameplay) && CurrentState == ESTBGameMode::Playing)
 	{
 		PlayerPawn->MoveTo(CurrentPlayerLocation, Gameplay->GetCurrentBallBounds());
-		PlayerPawn->UpdateAnimation(DeltaSeconds, MoveDirection);
+		PlayerPawn->UpdateAnimation(DeltaSeconds, MoveDirection, CurrentAcceleration);
 	}
 }
 

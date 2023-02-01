@@ -39,7 +39,7 @@ void ASTBPawn::MoveTo(FVector2D Coord, const FBoxSphereBounds &LevelBounds)
 	}
 }
 
-void ASTBPawn::UpdateAnimation(float DeltaTime, FVector2D Input2D)
+void ASTBPawn::UpdateAnimation(float DeltaTime, FVector2D Input2D, FVector2D Acceleration2D)
 {
 	/*Constant spinning of saucer*/
 	if (RotatingComponent)
@@ -56,7 +56,17 @@ void ASTBPawn::UpdateAnimation(float DeltaTime, FVector2D Input2D)
 	if (Input2D.X > 0.1f || Input2D.X < -0.1f)
 	{
 		RollInterpTarget = FMath::Sign(Input2D.X)*TiltAngle*(-1);
-		RollTiltSpeed = AccelerationTiltSpeed;
+
+		/*if changing direction while still having momentum = brake*/
+		if (FMath::Sign(Acceleration2D.X) != FMath::Sign(Input2D.X))
+		{
+			RollTiltSpeed = BrakeDeceleration;
+		}
+		else
+		{
+			/*normal horizontal acceleration*/
+			RollTiltSpeed = AccelerationTiltSpeed;
+		}
 	}
 	
 	/*Default: as if no buttons are pressed*/
@@ -67,9 +77,20 @@ void ASTBPawn::UpdateAnimation(float DeltaTime, FVector2D Input2D)
 	if(Input2D.Y > 0.1f || Input2D.Y < -0.1f)
 	{
 		PitchInterpTarget = FMath::Sign(Input2D.Y)*TiltAngle;
-		PitchTiltSpeed = AccelerationTiltSpeed;
+
+		/*if changing direction while still having momentum = brake*/
+		if (FMath::Sign(Acceleration2D.Y) != FMath::Sign(Input2D.Y))
+		{
+			PitchTiltSpeed = AccelerationTiltSpeed;
+		}
+		else
+		{
+			/*normal horizontal acceleration*/
+			PitchTiltSpeed = AccelerationTiltSpeed;
+		}
 	}
 
+	/*Translating rotation*/
 	SetActorRotation(FRotator(
 		FMath::FInterpTo(GetActorRotation().Pitch, PitchInterpTarget, DeltaTime, PitchTiltSpeed),
 		GetActorRotation().Yaw,

@@ -19,7 +19,7 @@ public:
 	void ShowBeamUp();
 	void EndBeamUp();
 	float GetAcceleratedLocation(double& InputDirection, float InputValue, double& CurrentAcceleration, float DeltaTime);
-	void UpdateAnimation(float DeltaTime, FVector2D Input2D);
+	void UpdateAnimation(float DeltaTime, FVector2D Input2D, FVector2D Acceleration2D);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
 	float PlayerSpeed = 0.01f;
