@@ -52,41 +52,43 @@ void ASTBPawn::UpdateAnimation(float DeltaTime, FVector2D Input2D, FVector2D Acc
 	float RollTiltSpeed = DecelerationTiltSpeed;
 	float RollInterpTarget = 0;
 
-	/*If buttons for horizontal movement are pressed*/
-	if (Input2D.X > 0.1f || Input2D.X < -0.1f)
-	{
-		RollInterpTarget = FMath::Sign(Input2D.X)*TiltAngle*(-1);
-
-		/*if changing direction while still having momentum = brake*/
-		if (FMath::Sign(Acceleration2D.X) != FMath::Sign(Input2D.X))
-		{
-			RollTiltSpeed = BrakeDeceleration;
-		}
-		else
-		{
-			/*normal horizontal acceleration*/
-			RollTiltSpeed = AccelerationTiltSpeed;
-		}
-	}
-	
-	/*Default: as if no buttons are pressed*/
 	float PitchTiltSpeed = DecelerationTiltSpeed;
 	float PitchInterpTarget = 0;
 
-	/*If buttons for vertical movement are pressed*/
-	if(Input2D.Y > 0.1f || Input2D.Y < -0.1f)
+	if(!bMovementLocked)
 	{
-		PitchInterpTarget = FMath::Sign(Input2D.Y)*TiltAngle;
+		/*If buttons for horizontal movement are pressed*/
+		if (Input2D.X > 0.1f || Input2D.X < -0.1f)
+		{
+			RollInterpTarget = FMath::Sign(Input2D.X)*TiltAngle*(-1);
 
-		/*if changing direction while still having momentum = brake*/
-		if (FMath::Sign(Acceleration2D.Y) != FMath::Sign(Input2D.Y))
-		{
-			PitchTiltSpeed = AccelerationTiltSpeed;
+			/*if changing direction while still having momentum = brake*/
+			if (FMath::Sign(Acceleration2D.X) != FMath::Sign(Input2D.X))
+			{
+				RollTiltSpeed = BrakeDeceleration;
+			}
+			else
+			{
+				/*normal horizontal acceleration*/
+				RollTiltSpeed = AccelerationTiltSpeed;
+			}
 		}
-		else
+
+		/*If buttons for vertical movement are pressed*/
+		if(Input2D.Y > 0.1f || Input2D.Y < -0.1f)
 		{
-			/*normal horizontal acceleration*/
-			PitchTiltSpeed = AccelerationTiltSpeed;
+			PitchInterpTarget = FMath::Sign(Input2D.Y)*TiltAngle;
+
+			/*if changing direction while still having momentum = brake*/
+			if (FMath::Sign(Acceleration2D.Y) != FMath::Sign(Input2D.Y))
+			{
+				PitchTiltSpeed = AccelerationTiltSpeed;
+			}
+			else
+			{
+				/*normal horizontal acceleration*/
+				PitchTiltSpeed = AccelerationTiltSpeed;
+			}
 		}
 	}
 

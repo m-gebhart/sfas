@@ -75,7 +75,7 @@ void UPlayingScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		if(PlayingState == EPlayingState::Showing)
 		{
 			//Beam Up of Sight (Target)
-			if(!PlayerController->bIsTargetCaptured())
+			if(PlayerController->GetGameplay()->GetWin() && !PlayerController->bIsTargetCaptured())
 			{
 				static const float TotalDistance = PlayerController->GetPlayerPawn()->GetActorLocation().Z - PlayerController->GetGameplay()->GetBallLocation().Z;
 				FVector CurrentBeamingSightLocation = FVector(PlayerController->GetGameplay()->GetLevelData()->GetTargetSightActor()->GetActorLocation() + FVector(0, 0, TotalDistance / PlayerController->GetPlayerPawn()->BeamUpSpeed*InDeltaTime));
