@@ -6,6 +6,14 @@
 #include "GameFramework/DefaultPawn.h"
 #include "STBPawn.generated.h"
 
+UENUM()
+enum class EBounceBehaviour : uint8
+{
+	None,
+	Horizontal,
+	Vertical
+};
+
 UCLASS()
 class STB_API ASTBPawn : public APawn
 {
@@ -22,10 +30,13 @@ public:
 	void EndBeamUp();
 
 	UFUNCTION(BlueprintCallable)
-	void SetBouncing(bool bBounce);
+	void SetBouncingInDirection(EBounceBehaviour BounceDirection);
 
 	UFUNCTION(BlueprintCallable)
 	bool GetBouncing() const;
+
+	UFUNCTION(BlueprintCallable)
+	EBounceBehaviour GetBouncingDirection() const;
 
 	UFUNCTION(BlueprintCallable)
 	void LockMovement(bool bMove);
@@ -65,6 +76,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Animation")
 	float BrakeTiltSpeed = 3.f;
+
+	UPROPERTY(EditAnywhere, Category="Animation")
+	float BounceTiltSpeed = 3.f;
 	
 	UPROPERTY(EditAnywhere, Category="Animation")
 	float TiltAngle = 40.f;
@@ -83,7 +97,7 @@ private:
 	bool bMovementLocked = false;
 
 	UPROPERTY(VisibleAnywhere, Category="Movement")
-	bool bIsBouncing = false;
+	EBounceBehaviour BounceBehaviour;
 	
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* RotatingComponent;

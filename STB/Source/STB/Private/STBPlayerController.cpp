@@ -256,7 +256,7 @@ void ASTBPlayerController::LeftRight(float Value)
 		{
 			LatestPlayerBounceTimeStamp = UGameplayStatics::GetTimeSeconds(GetWorld());
 			CurrentAcceleration.X *= PlayerPawn->BounceIntensity*(-1.f);
-			PlayerPawn->SetBouncing(true);
+			PlayerPawn->SetBouncingInDirection(EBounceBehaviour::Horizontal);
 			Value = 0;
 		}
 		/*as long as player is bouncing back, input value is ignored*/
@@ -267,7 +267,7 @@ void ASTBPlayerController::LeftRight(float Value)
 			/*stop bouncing back after time defined in BP PlayerPawn*/
 			if (UGameplayStatics::GetTimeSeconds(GetWorld()) - LatestPlayerBounceTimeStamp > PlayerPawn->BounceStunDuration)
 			{
-				PlayerPawn->SetBouncing(false);
+				PlayerPawn->SetBouncingInDirection(EBounceBehaviour::None);
 			}
 		}
 		
@@ -286,7 +286,7 @@ void ASTBPlayerController::UpDown(float Value)
 		{
 			LatestPlayerBounceTimeStamp = UGameplayStatics::GetTimeSeconds(GetWorld());
 			CurrentAcceleration.Y *= PlayerPawn->BounceIntensity*(-1.f);
-			PlayerPawn->SetBouncing(true);
+			PlayerPawn->SetBouncingInDirection(EBounceBehaviour::Vertical);
 			Value = 0;
 		}
 		/*as long as player is bouncing back, input value is ignored*/
@@ -297,7 +297,7 @@ void ASTBPlayerController::UpDown(float Value)
 			/*stop bouncing back after time defined in BP PlayerPawn*/
 			if (UGameplayStatics::GetTimeSeconds(GetWorld()) - LatestPlayerBounceTimeStamp > PlayerPawn->BounceStunDuration)
 			{
-				PlayerPawn->SetBouncing(false);
+				PlayerPawn->SetBouncingInDirection(EBounceBehaviour::None);
 			}
 		}
 		CurrentPlayerLocation.Y = FMath::Clamp(

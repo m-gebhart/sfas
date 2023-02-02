@@ -4,6 +4,7 @@
 #include "STBPawn.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Particles/Collision/ParticleModuleCollisionGPU.h"
 
 ASTBPawn::ASTBPawn()
 {
@@ -47,6 +48,8 @@ void ASTBPawn::UpdateAnimation(float DeltaTime, FVector2D Input2D, FVector2D Acc
 		RotatingComponent->AddRelativeRotation(FRotator(0., SpinningRate*DeltaTime, 0.f));
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("%f; %f"), Acceleration2D.X,  Acceleration2D.Y);
+
 	/*TILT ANIMATION WHEN MOVING*/
 	/*Default: as if no buttons are pressed*/
 	float RollTiltSpeed = DecelerationTiltSpeed;
@@ -55,7 +58,20 @@ void ASTBPawn::UpdateAnimation(float DeltaTime, FVector2D Input2D, FVector2D Acc
 	float PitchTiltSpeed = DecelerationTiltSpeed;
 	float PitchInterpTarget = 0;
 
-	if(!bMovementLocked)
+	if(GetBouncing())
+	{
+		if (GetBouncingDirection() == EBounceBehaviour::Horizontal)
+		{
+			RollTiltSpeed = BounceTiltSpeed;
+			RollInterpTarget = FMath::Sign(Acceleration2D.X)*(-1)*TiltAngle;
+		}
+		else
+		{
+			PitchTiltSpeed = BounceTiltSpeed;
+			PitchInterpTarget = FMath::Sign(Acceleration2D.Y)*TiltAngle;
+		}
+	}
+	else if(!bMovementLocked)
 	{
 		/*If buttons for horizontal movement are pressed*/
 		if (Input2D.X > 0.1f || Input2D.X < -0.1f)
@@ -82,7 +98,7 @@ void ASTBPawn::UpdateAnimation(float DeltaTime, FVector2D Input2D, FVector2D Acc
 			/*if changing direction while still having momentum = brake*/
 			if (FMath::Sign(Acceleration2D.Y) != FMath::Sign(Input2D.Y))
 			{
-				PitchTiltSpeed = AccelerationTiltSpeed;
+				PitchTiltSpeed = BrakeDeceleration;
 			}
 			else
 			{
@@ -147,14 +163,19 @@ void ASTBPawn::EndBeamUp()
 	}
 }
 
-void ASTBPawn::SetBouncing(bool bBounce)
+void ASTBPawn::SetBouncingInDirection(EBounceBehaviour BounceDirection)
 {
-	bIsBouncing = bBounce;
+	BounceBehaviour = BounceDirection;
 }
 
 bool ASTBPawn::GetBouncing() const
 {
-	return bIsBouncing;
+	return BounceBehaviour != EBounceBehaviour::None;
+}
+
+EBounceBehaviour ASTBPawn::GetBouncingDirection() const
+{
+	return BounceBehaviour;
 }
 
 void ASTBPawn::LockMovement(bool bMove)
