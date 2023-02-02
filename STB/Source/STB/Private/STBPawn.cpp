@@ -48,8 +48,9 @@ void ASTBPawn::UpdateAnimation(float DeltaTime, FVector2D Input2D, FVector2D Acc
 		RotatingComponent->AddRelativeRotation(FRotator(0., SpinningRate*DeltaTime, 0.f));
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("%f; %f"), Acceleration2D.X,  Acceleration2D.Y);
-
+	if (!CanMove())
+		return;
+	
 	/*TILT ANIMATION WHEN MOVING*/
 	/*Default: as if no buttons are pressed*/
 	float RollTiltSpeed = DecelerationTiltSpeed;
@@ -185,7 +186,7 @@ void ASTBPawn::LockMovement(bool bMove)
 
 bool ASTBPawn::CanMove() const
 {
-	return bMovementLocked;
+	return !bMovementLocked;
 }
 
 

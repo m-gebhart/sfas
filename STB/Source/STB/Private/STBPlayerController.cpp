@@ -249,7 +249,7 @@ void ASTBPlayerController::SetupScreen(ESTBGameMode State, TSubclassOf<UScreen> 
 
 void ASTBPlayerController::LeftRight(float Value)
 {
-	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && !PlayerPawn->CanMove())
+	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && PlayerPawn->CanMove())
 	{
 		/* if borders on the left or right are hit, start bounce back*/
 		if(VerticalBorderHitByPlayer() && !PlayerPawn->GetBouncing()) 
@@ -279,7 +279,7 @@ void ASTBPlayerController::LeftRight(float Value)
 
 void ASTBPlayerController::UpDown(float Value)
 {
-	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && !PlayerPawn->CanMove())
+	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && PlayerPawn->CanMove())
 	{
 		/* if borders on the top or bottom are hit, start bounce back*/
 		if(HorizontalBorderHitByPlayer() && !PlayerPawn->GetBouncing()) 
