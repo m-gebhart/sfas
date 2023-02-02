@@ -13,13 +13,13 @@ ASTBPawn::ASTBPawn()
 void ASTBPawn::BeginPlay()
 {
 	UActorComponent* SaucerMeshComp = GetComponentsByTag(UStaticMeshComponent::StaticClass(), "Saucer")[0];
-	if (SaucerMeshComp)
+	if (IsValid(SaucerMeshComp))
 	{
 		RotatingComponent = Cast<UStaticMeshComponent>(SaucerMeshComp);
 	}
 
 	UActorComponent* BeamMeshComp = GetComponentsByTag(UStaticMeshComponent::StaticClass(), "Showing")[0];
-	if (BeamMeshComp)
+	if (IsValid(BeamMeshComp))
 	{
 		ShowingBeamComp = Cast<UStaticMeshComponent>(BeamMeshComp);
 		ShowingBeamComp->SetVisibility(false);
@@ -42,7 +42,7 @@ void ASTBPawn::MoveTo(FVector2D Coord, const FBoxSphereBounds &LevelBounds)
 void ASTBPawn::UpdateAnimation(float DeltaTime, FVector2D Input2D, FVector2D Acceleration2D)
 {
 	/*Constant spinning of saucer*/
-	if (RotatingComponent)
+	if (IsValid(RotatingComponent))
 	{
 		RotatingComponent->AddRelativeRotation(FRotator(0., SpinningRate*DeltaTime, 0.f));
 	}

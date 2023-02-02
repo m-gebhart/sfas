@@ -23,10 +23,10 @@ const FProgressionLevelData* AProgressionData::SpawnLevel(int32 Level)
 		//Spawn Ground as Static Mesh Cube and align to scale of ball bounds' box extent
 		FActorSpawnParameters SpawnParameters;
 		GroundMesh = GetWorld()->SpawnActor<AStaticMeshActor>(LevelData->BallBounds.Origin, FRotator::ZeroRotator, SpawnParameters);
-		if (GroundMesh)
+		if (IsValid(GroundMesh))
 		{
 			GroundMesh->SetMobility(EComponentMobility::Movable);
-			if (LevelData->GroundMesh.StaticMeshAsset)
+			if (IsValid(LevelData->GroundMesh.StaticMeshAsset))
 			{
 				GroundMesh->GetStaticMeshComponent()->SetStaticMesh(LevelData->GroundMesh.StaticMeshAsset);
 			}
@@ -47,10 +47,10 @@ const FProgressionLevelData* AProgressionData::SpawnLevel(int32 Level)
 		//Spawn Ball = Target Sight to get
 		const FVector SightSpawnLocation = Cast<ASTBPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0))->GetGameplay()->GetBallLocation();
 		TargetSightMesh = GetWorld()->SpawnActor<AStaticMeshActor>(SightSpawnLocation, FRotator::ZeroRotator, SpawnParameters);
-		if(TargetSightMesh)
+		if(IsValid(TargetSightMesh))
 		{
 			TargetSightMesh->SetMobility(EComponentMobility::Movable);
-			if (LevelData->TargetSightMesh.StaticMeshAsset)
+			if (IsValid(LevelData->TargetSightMesh.StaticMeshAsset))
 			{
 				TargetSightMesh->GetStaticMeshComponent()->SetStaticMesh(LevelData->TargetSightMesh.StaticMeshAsset);
 				TargetSightMesh->SetActorScale3D(LevelData->TargetSightMesh.StaticMeshScale);
@@ -115,9 +115,9 @@ void AProgressionData::CleanupLevel()
 	}
 
 	SpawnedActors.Empty();
-	if (GroundMesh)
+	if (IsValid(GroundMesh))
 		GroundMesh->Destroy();
-	if (TargetSightMesh)
+	if (IsValid(TargetSightMesh))
 		TargetSightMesh->Destroy();
 }
 

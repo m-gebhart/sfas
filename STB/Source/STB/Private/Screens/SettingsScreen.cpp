@@ -123,7 +123,7 @@ void USettingsScreen::UpdatedChangedMinimapSize()
 
 	ASTBPlayerCameraManager* Class = Cast<ASTBPlayerCameraManager>(PlayerController->PlayerCameraManager);
 	const float updatedScale = 0.2f*(static_cast<uint8>(CurrentMinimapSize)+1.f);
-	if (Class != nullptr)
+	if (IsValid(Class))
 	{
 		Class->MinimapScale = updatedScale;
 	}
