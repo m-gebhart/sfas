@@ -24,6 +24,8 @@ void ASTBPawn::BeginPlay()
 	{
 		ShowingBeamComp = Cast<UStaticMeshComponent>(BeamMeshComp);
 		ShowingBeamComp->SetVisibility(false);
+		DynamicBeamMaterial = ShowingBeamComp->CreateDynamicMaterialInstance(0); // UMaterialInstanceDynamic::Create(ShowingBeamComp->GetMaterial(0), 0);
+		BeamCompOffset = GetActorLocation().Z - ShowingBeamComp->GetComponentLocation().Z;
 	}
 }
 
@@ -149,10 +151,13 @@ void ASTBPawn::ShowBeamUp()
 	if (IsValid(ShowingBeamComp))
 	{
 		bMovementLocked = true;
-		UMaterialInstanceDynamic* DynamicBeamMaterial = UMaterialInstanceDynamic::Create(ShowingBeamComp->GetMaterial(0), this);
+		ShowingBeamComp->SetWorldRotation(FRotator::ZeroRotator);
+		ShowingBeamComp->SetWorldLocation(GetActorLocation() - FVector(0, 0, BeamCompOffset));
 		ShowingBeamComp->SetVisibility(true);
 		if (IsValid(DynamicBeamMaterial))
-			DynamicBeamMaterial->SetScalarParameterValue(FName(TEXT("EmissionLevel")),0.f);
+		{
+			DynamicBeamMaterial->SetVectorParameterValue(("Color"), FColor::Red);
+		}
 	}
 }
 

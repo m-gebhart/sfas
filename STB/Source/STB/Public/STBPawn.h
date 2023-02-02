@@ -104,4 +104,10 @@ private:
 	
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* ShowingBeamComp;
+
+	UPROPERTY(VisibleAnywhere)
+	UMaterialInstanceDynamic* DynamicBeamMaterial;
+
+	UPROPERTY(VisibleAnywhere)
+	float BeamCompOffset;
 };
