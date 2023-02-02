@@ -93,7 +93,7 @@ void UPlayingScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 				}
 
 				//Fully Faded In
-				if(Images[TargetImageIndex]->ColorAndOpacity.A >= 1.0f && PlayerController->bIsTargetCaptured())
+				if(Images[TargetImageIndex]->ColorAndOpacity.A >= 1.0f && (PlayerController->bIsTargetCaptured() || !PlayerController->GetGameplay()->GetWin()))
 				{
 					PlayingState = EPlayingState::Shown;
 					PlayerController->GetPlayerPawn()->EndBeamUp();
@@ -242,13 +242,15 @@ void UPlayingScreen::DoReveal(const bool bLastGuessCorrect)
 	ShowLevel(false);
 	ShowLives(false);
 	ShowPrompt(true);
-	PlayerController->GetPlayerPawn()->ShowBeamUp();
+	PlayerController->GetPlayerPawn()->ShowBeamUp(bLastGuessCorrect ? WinColor : LoseColor);
 	PlayingState = EPlayingState::Showing;
+	UE_LOG(LogTemp, Warning, TEXT("SHOWING..."));
 }
 
 void UPlayingScreen::StartCountdown()
 {
 	GetWorld()->GetTimerManager().SetTimer(CountdownTimerHandle, this, &UPlayingScreen::UpdateCountdown, 0.1f, true, 0);
+	Texts[TimeTextIndex]->SetColorAndOpacity(FColor::White);
 }
 
 void UPlayingScreen::UpdateCountdown()
@@ -266,7 +268,8 @@ void UPlayingScreen::UpdateCountdown()
 void UPlayingScreen::EndCountdown()
 {
 	GetWorld()->GetTimerManager().ClearTimer(CountdownTimerHandle);
-	Texts[TimeTextIndex]->SetText(PlayerController->GetGameplay()->GetWin() ? FText::FromString("SUCCESS!") : FText::FromString("TIME'S OUT"));
+	Texts[TimeTextIndex]->SetText(PlayerController->GetGameplay()->GetWin() ? FText::FromString("SUCCESS!") : FText::FromString("FAILED!"));
+	Texts[TimeTextIndex]->SetColorAndOpacity(PlayerController->GetGameplay()->GetWin() ? WinColor : LoseColor);
 }
 
 void UPlayingScreen::Reset()
@@ -293,6 +296,8 @@ void UPlayingScreen::Reset()
 			const_cast<UGameplay*>(Gameplay)->SetTime(Gameplay->GetTotalTimeLimit());
 		}
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("RESET"));
 
 	SetMinimap();
 	StartCountdown();

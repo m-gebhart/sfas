@@ -146,7 +146,7 @@ float ASTBPawn::GetAcceleratedLocationOnAxis(double& InputDirection, float Input
 	return CurrentAcceleration*PlayerSpeed;
 }
 
-void ASTBPawn::ShowBeamUp()
+void ASTBPawn::ShowBeamUp(FColor BeamColor)
 {
 	if (IsValid(ShowingBeamComp))
 	{
@@ -156,7 +156,7 @@ void ASTBPawn::ShowBeamUp()
 		ShowingBeamComp->SetVisibility(true);
 		if (IsValid(DynamicBeamMaterial))
 		{
-			DynamicBeamMaterial->SetVectorParameterValue(("Color"), FColor::Red);
+			DynamicBeamMaterial->SetVectorParameterValue(("Color"), BeamColor);
 		}
 	}
 }

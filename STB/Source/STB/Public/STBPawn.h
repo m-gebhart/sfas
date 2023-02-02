@@ -26,7 +26,7 @@ public:
 	void MoveTo(FVector2D Coord, const FBoxSphereBounds &LevelBounds);
 	void UpdateAnimation(float DeltaTime, FVector2D Input2D, FVector2D Acceleration2D);
 	float GetAcceleratedLocationOnAxis(double& InputDirection, float InputValue, double& CurrentAcceleration, float DeltaTime);
-	void ShowBeamUp();
+	void ShowBeamUp(FColor BeamColor);
 	void EndBeamUp();
 
 	UFUNCTION(BlueprintCallable)
