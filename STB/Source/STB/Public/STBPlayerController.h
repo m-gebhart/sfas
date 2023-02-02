@@ -45,6 +45,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	const FVector2D& GetCurrentPlayerLocation() const;
+
+	UFUNCTION(BlueprintCallable)
+	bool HorizontalBorderHitByPlayer() const;
+
+	UFUNCTION(BlueprintCallable)
+	bool VerticalBorderHitByPlayer() const;
 	
 	UFUNCTION(BlueprintCallable)
 	FVector2D GetCurrentBallLocation() const;
@@ -57,6 +63,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	ASTBPawn* GetPlayerPawn() const;
+
+	UFUNCTION(BlueprintCallable)
+	FVector2D GetCurrentAcceleration() const;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
 	FVector OrbitPivot = FVector(0.0f, -50.0f, 125.0f);
@@ -138,6 +147,9 @@ private:
 
 	UFUNCTION()
 	void SpecialRightButtonPress();
+
+	UFUNCTION()
+	void ResetPlayer();
 	
 	UPROPERTY(VisibleAnywhere)
 	UGameplay * Gameplay;
@@ -159,6 +171,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	float AccelerationValue;
+
+	UPROPERTY(VisibleAnywhere)
+	float LatestPlayerBounceTimeStamp;
 	
 	FVector LastOrbitPawnLocation;
 	FRotator LastOrbitPawnViewRotation;

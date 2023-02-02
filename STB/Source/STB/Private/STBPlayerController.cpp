@@ -10,7 +10,6 @@
 #include "Gameplay.h"
 #include "Screen.h"
 #include "STBPawn.h"
-#include "Screens/PlayingScreen.h"
 #include "STBPlayerCameraManager.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/PawnMovementComponent.h"
@@ -104,8 +103,7 @@ void ASTBPlayerController::BeginNewGame()
 {
 	if(Gameplay != nullptr)
 	{
-		CurrentPlayerLocation = FVector2D::ZeroVector;
-		CurrentAcceleration = FVector2D::ZeroVector;
+		ResetPlayer();
 		PlayerPawn = dynamic_cast<ASTBPawn*>(GetPawn());
 		Gameplay->StartNewGame();
 		Gameplay->NextLevel();
@@ -116,9 +114,7 @@ void ASTBPlayerController::ContinueGame()
 {
 	if(Gameplay != nullptr)
 	{
-		CurrentPlayerLocation = FVector2D::ZeroVector;
-		CurrentAcceleration = FVector2D::ZeroVector;
-		PlayerPawn->bMovementLocked = false;
+		ResetPlayer();
 
 		if(Gameplay->GetWin())
 		{
@@ -159,6 +155,17 @@ const FVector2D& ASTBPlayerController::GetCurrentPlayerLocation() const
 	return CurrentPlayerLocation;
 }
 
+bool ASTBPlayerController::HorizontalBorderHitByPlayer() const
+{
+	return CurrentPlayerLocation.Y < 0.01f || CurrentPlayerLocation.Y > 0.99f;
+}
+
+bool ASTBPlayerController::VerticalBorderHitByPlayer() const
+{
+	return CurrentPlayerLocation.X < 0.01f || CurrentPlayerLocation.X > 0.99f;
+}
+
+
 FVector2D ASTBPlayerController::GetCurrentBallLocation() const
 {
 	//static const FVector2D ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
@@ -190,6 +197,11 @@ bool ASTBPlayerController::bIsTargetCaptured()
 ASTBPawn* ASTBPlayerController::GetPlayerPawn() const
 {
 	return PlayerPawn;
+}
+
+FVector2D ASTBPlayerController::GetCurrentAcceleration() const
+{
+	return CurrentAcceleration;
 }
 
 void ASTBPlayerController::BeginPlay()
@@ -237,20 +249,59 @@ void ASTBPlayerController::SetupScreen(ESTBGameMode State, TSubclassOf<UScreen> 
 
 void ASTBPlayerController::LeftRight(float Value)
 {
-	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && !PlayerPawn->bMovementLocked)
+	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && !PlayerPawn->CanMove())
 	{
+		/* if borders on the left or right are hit, start bounce back*/
+		if(VerticalBorderHitByPlayer() && !PlayerPawn->GetBouncing()) 
+		{
+			LatestPlayerBounceTimeStamp = UGameplayStatics::GetTimeSeconds(GetWorld());
+			CurrentAcceleration.X *= PlayerPawn->BounceIntensity*(-1.f);
+			PlayerPawn->SetBouncing(true);
+			Value = 0;
+		}
+		/*as long as player is bouncing back, input value is ignored*/
+		else if ((PlayerPawn->GetBouncing()))
+		{
+			Value = 0;
+
+			/*stop bouncing back after time defined in BP PlayerPawn*/
+			if (UGameplayStatics::GetTimeSeconds(GetWorld()) - LatestPlayerBounceTimeStamp > PlayerPawn->BounceStunDuration)
+			{
+				PlayerPawn->SetBouncing(false);
+			}
+		}
+		
 		CurrentPlayerLocation.X = FMath::Clamp(
-			CurrentPlayerLocation.X + PlayerPawn->GetAcceleratedLocation(MoveDirection.X, Value, CurrentAcceleration.X, UGameplayStatics::GetWorldDeltaSeconds(GetWorld())),
+			CurrentPlayerLocation.X + PlayerPawn->GetAcceleratedLocationOnAxis(MoveDirection.X, Value, CurrentAcceleration.X, UGameplayStatics::GetWorldDeltaSeconds(GetWorld())),
 			0, 1.f);
 	}
 }
 
 void ASTBPlayerController::UpDown(float Value)
 {
-	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && !PlayerPawn->bMovementLocked)
+	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && !PlayerPawn->CanMove())
 	{
+		/* if borders on the top or bottom are hit, start bounce back*/
+		if(HorizontalBorderHitByPlayer() && !PlayerPawn->GetBouncing()) 
+		{
+			LatestPlayerBounceTimeStamp = UGameplayStatics::GetTimeSeconds(GetWorld());
+			CurrentAcceleration.Y *= PlayerPawn->BounceIntensity*(-1.f);
+			PlayerPawn->SetBouncing(true);
+			Value = 0;
+		}
+		/*as long as player is bouncing back, input value is ignored*/
+		else if ((PlayerPawn->GetBouncing()))
+		{
+			Value = 0;
+
+			/*stop bouncing back after time defined in BP PlayerPawn*/
+			if (UGameplayStatics::GetTimeSeconds(GetWorld()) - LatestPlayerBounceTimeStamp > PlayerPawn->BounceStunDuration)
+			{
+				PlayerPawn->SetBouncing(false);
+			}
+		}
 		CurrentPlayerLocation.Y = FMath::Clamp(
-			CurrentPlayerLocation.Y + PlayerPawn->GetAcceleratedLocation(MoveDirection.Y, Value, CurrentAcceleration.Y, UGameplayStatics::GetWorldDeltaSeconds(GetWorld())),
+			CurrentPlayerLocation.Y + PlayerPawn->GetAcceleratedLocationOnAxis(MoveDirection.Y, Value, CurrentAcceleration.Y, UGameplayStatics::GetWorldDeltaSeconds(GetWorld())),
 			0, 1.f);
 	}
 }
@@ -301,4 +352,12 @@ void ASTBPlayerController::SpecialRightButtonPress()
 	{
 		Widgets[Index]->Special2();
 	}
+}
+
+void ASTBPlayerController::ResetPlayer()
+{
+	CurrentPlayerLocation = FVector2D(0.1f);
+	CurrentAcceleration = FVector2D(0.1f);
+	if(IsValid(PlayerPawn))
+		PlayerPawn->LockMovement(false);
 }

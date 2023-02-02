@@ -16,10 +16,22 @@ public:
 	ASTBPawn();
 
 	void MoveTo(FVector2D Coord, const FBoxSphereBounds &LevelBounds);
+	void UpdateAnimation(float DeltaTime, FVector2D Input2D, FVector2D Acceleration2D);
+	float GetAcceleratedLocationOnAxis(double& InputDirection, float InputValue, double& CurrentAcceleration, float DeltaTime);
 	void ShowBeamUp();
 	void EndBeamUp();
-	float GetAcceleratedLocation(double& InputDirection, float InputValue, double& CurrentAcceleration, float DeltaTime);
-	void UpdateAnimation(float DeltaTime, FVector2D Input2D, FVector2D Acceleration2D);
+
+	UFUNCTION(BlueprintCallable)
+	void SetBouncing(bool bBounce);
+
+	UFUNCTION(BlueprintCallable)
+	bool GetBouncing() const;
+
+	UFUNCTION(BlueprintCallable)
+	void LockMovement(bool bMove);
+
+	UFUNCTION(BlueprintCallable)
+	bool CanMove() const;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
 	float PlayerSpeed = 0.01f;
@@ -33,11 +45,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float BrakeDeceleration = 1.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
+	float BounceIntensity = 0.01f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
+	float BounceStunDuration = 0.75f;
+	
 	UPROPERTY(EditAnywhere, Category="Movement")
 	float MovementHeight = 100.f;
-
-	UPROPERTY(VisibleAnywhere, Category="Movement")
-	bool bMovementLocked = false;
 
 	UPROPERTY(EditAnywhere, Category="Animation")
 	float SpinningRate = 15.f;
@@ -64,6 +79,12 @@ protected:
 	virtual void BeginPlay() override;
 	
 private:
+	UPROPERTY(VisibleAnywhere, Category="Movement")
+	bool bMovementLocked = false;
+
+	UPROPERTY(VisibleAnywhere, Category="Movement")
+	bool bIsBouncing = false;
+	
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* RotatingComponent;
 	

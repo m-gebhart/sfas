@@ -100,7 +100,7 @@ void ASTBPawn::UpdateAnimation(float DeltaTime, FVector2D Input2D, FVector2D Acc
 }
 
 //Called by PlayerController to calculate new position (PC's Tick() will call MoveTo() and will refer to that new pos)
-float ASTBPawn::GetAcceleratedLocation(double& InputDirection, float InputValue, double& CurrentAcceleration, float DeltaTime)
+float ASTBPawn::GetAcceleratedLocationOnAxis(double& InputDirection, float InputValue, double& CurrentAcceleration, float DeltaTime)
 {
 	//if movement button is pressed
 	if((InputValue > 0.1f || InputValue < -0.1f))
@@ -127,10 +127,9 @@ float ASTBPawn::GetAcceleratedLocation(double& InputDirection, float InputValue,
 	return CurrentAcceleration*PlayerSpeed;
 }
 
-
 void ASTBPawn::ShowBeamUp()
 {
-	if (ShowingBeamComp)
+	if (IsValid(ShowingBeamComp))
 	{
 		bMovementLocked = true;
 		UMaterialInstanceDynamic* DynamicBeamMaterial = UMaterialInstanceDynamic::Create(ShowingBeamComp->GetMaterial(0), this);
@@ -142,9 +141,30 @@ void ASTBPawn::ShowBeamUp()
 
 void ASTBPawn::EndBeamUp()
 {
-	if (ShowingBeamComp)
+	if (IsValid(ShowingBeamComp))
 	{
 		ShowingBeamComp->SetVisibility(false);
 	}
 }
+
+void ASTBPawn::SetBouncing(bool bBounce)
+{
+	bIsBouncing = bBounce;
+}
+
+bool ASTBPawn::GetBouncing() const
+{
+	return bIsBouncing;
+}
+
+void ASTBPawn::LockMovement(bool bMove)
+{
+	bMovementLocked = bMove;
+}
+
+bool ASTBPawn::CanMove() const
+{
+	return bMovementLocked;
+}
+
 
