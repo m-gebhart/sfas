@@ -50,15 +50,15 @@ void USettingsScreen::Back_Implementation()
 	}	
 }
 
-void USettingsScreen::Alt1_Implementation()
+void USettingsScreen::Select_Implementation()
 {
-	CurrentVolume = FMath::Clamp(CurrentVolume + 0.1f, 0.0f, 1.0f);
+	CurrentVolume = FMath::Clamp(CurrentVolume - 0.1f, 0.0f, 1.0f);
 	UpdateUI();
 }
 
 void USettingsScreen::Alt2_Implementation()
 {
-	CurrentVolume = FMath::Clamp(CurrentVolume - 0.1f, 0.0f, 1.0f);
+	CurrentVolume = FMath::Clamp(CurrentVolume + 0.1f, 0.0f, 1.0f);
 	UpdateUI();
 }
 
@@ -73,10 +73,10 @@ void USettingsScreen::UpdatedChangedVolume()
 	Class->Properties.Volume = CurrentVolume; 
 }
 
-void USettingsScreen::Special1_Implementation()
+void USettingsScreen::Alt1_Implementation()
 {
 	//Decrease Value of Minimap Size
-	const uint8 CurrentSizeIndex = FMath::Clamp(static_cast<uint8>(CurrentMinimapSize) -1 , 0, 2);
+	const uint8 CurrentSizeIndex = static_cast<uint8>(CurrentMinimapSize) + 1 % 3;
 	switch (CurrentSizeIndex)
 	{
 		default:
@@ -86,24 +86,6 @@ void USettingsScreen::Special1_Implementation()
 			CurrentMinimapSize = EMinimapSize::Medium; break;
 		case 2:
 			CurrentMinimapSize = EMinimapSize::Big; break;
-	}
-	
-	UpdateUI();
-}
-
-void USettingsScreen::Special2_Implementation()
-{
-	//Increase Value of Minimap Size
-	const uint8 CurrentSizeIndex = FMath::Clamp(static_cast<uint8>(CurrentMinimapSize) +1 , 0, 2);
-	switch (CurrentSizeIndex)
-	{
-	default:
-	case 0:
-		CurrentMinimapSize = EMinimapSize::Small; break;
-	case 1:
-		CurrentMinimapSize = EMinimapSize::Medium; break;
-	case 2:
-		CurrentMinimapSize = EMinimapSize::Big; break;
 	}
 	
 	UpdateUI();

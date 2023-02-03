@@ -61,7 +61,7 @@ void UScreen::NativeConstruct()
 void UScreen::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-	TimeInState += InDeltaTime;
+	TimeInState += InDeltaTime/AnimationTime;
 
 	if(IsValid(Canvas))
 	{

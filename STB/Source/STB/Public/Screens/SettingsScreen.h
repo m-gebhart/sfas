@@ -29,10 +29,9 @@ public:
 	virtual void Show(bool bShow) override;
 
 	virtual void Back_Implementation() override;
-	virtual void Alt1_Implementation() override;
+	virtual void Select_Implementation() override;
 	virtual void Alt2_Implementation() override;
-	virtual void Special1_Implementation() override;
-	virtual void Special2_Implementation() override;
+	virtual void Alt1_Implementation() override;
 
 private:
 

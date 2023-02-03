@@ -29,15 +29,10 @@ void UMainScreen::Alt2_Implementation()
 	}
 }
 
-void UMainScreen::Special1_Implementation()
+void UMainScreen::Back_Implementation()
 {
 	if(IsValid(PlayerController))
 	{
 		PlayerController->ShowUI(ESTBGameMode::Credits);
 	}
-}
-
-void UMainScreen::Special2_Implementation()
-{
-	UMainScreen::Special1_Implementation();
 }

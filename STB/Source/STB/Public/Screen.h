@@ -70,6 +70,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	void OnHidden();
 	virtual void OnHidden_Implementation();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AnimationTime = 1.f;
 	
 protected:
 
