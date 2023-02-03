@@ -11,8 +11,7 @@ UENUM(BlueprintType)
 enum class EMinimapSize : uint8
 {
 	Small = 0	UMETA(DisplayName="Small"),
-	Medium = 1	UMETA(DisplayName="Medium"),
-	Big	= 2		UMETA(DisplayName="Big")
+	Normal = 1	UMETA(DisplayName="Normal")
 };
 
 /**

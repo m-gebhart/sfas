@@ -28,7 +28,7 @@ void USettingsScreen::NativeConstruct()
 	}
 
 	CurrentVolume = 1.0f;
-	CurrentMinimapSize = EMinimapSize::Medium;
+	CurrentMinimapSize = EMinimapSize::Normal;
 }
 
 void USettingsScreen::Show(bool bShow)
@@ -76,16 +76,14 @@ void USettingsScreen::UpdatedChangedVolume()
 void USettingsScreen::Alt1_Implementation()
 {
 	//Decrease Value of Minimap Size
-	const uint8 CurrentSizeIndex = static_cast<uint8>(CurrentMinimapSize) + 1 % 3;
+	const uint8 CurrentSizeIndex = static_cast<uint8>(CurrentMinimapSize) + 1 % 2;
 	switch (CurrentSizeIndex)
 	{
 		default:
 		case 0:
 			CurrentMinimapSize = EMinimapSize::Small; break;
 		case 1:
-			CurrentMinimapSize = EMinimapSize::Medium; break;
-		case 2:
-			CurrentMinimapSize = EMinimapSize::Big; break;
+			CurrentMinimapSize = EMinimapSize::Normal; break;
 	}
 	
 	UpdateUI();
@@ -104,7 +102,7 @@ void USettingsScreen::UpdatedChangedMinimapSize()
 	}
 
 	ASTBPlayerCameraManager* Class = Cast<ASTBPlayerCameraManager>(PlayerController->PlayerCameraManager);
-	const float updatedScale = 0.2f*(static_cast<uint8>(CurrentMinimapSize)+1.f);
+	const float updatedScale = 0.15f*(static_cast<uint8>(CurrentMinimapSize)+1.f);
 	if (IsValid(Class))
 	{
 		Class->MinimapScale = updatedScale;
