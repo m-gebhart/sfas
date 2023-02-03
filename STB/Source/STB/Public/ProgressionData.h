@@ -31,6 +31,27 @@ struct FProgressionCharacterData
 };
 
 USTRUCT(BlueprintType)
+struct FProgressionMovementData
+{
+	GENERATED_BODY();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bOverwriteMovement;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (EditCondition = "bOverwriteMovement", EditConditionHides))
+	float Speed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (EditCondition = "bOverwriteMovement", EditConditionHides))
+	float Acceleration;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (EditCondition = "bOverwriteMovement", EditConditionHides))
+	float NormalDeceleration;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (EditCondition = "bOverwriteMovement", EditConditionHides))
+	float BrakeDeceleration;
+};
+
+USTRUCT(BlueprintType)
 struct FProgressionStaticMeshData
 {
 	GENERATED_BODY()
@@ -52,6 +73,9 @@ struct FProgressionLevelData
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<FProgressionCharacterData> Characters;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FProgressionMovementData Movement;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FBoxSphereBounds BallBounds;
@@ -82,6 +106,7 @@ public:
 	void CleanupLevel();
 	int GetNumLevels() const;
 	AStaticMeshActor* GetTargetSightActor() const;
+	FProgressionLevelData* GetDataFromLevelIndex(int index);
 
 protected:
 

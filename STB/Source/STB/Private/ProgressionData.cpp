@@ -64,8 +64,8 @@ const FProgressionLevelData* AProgressionData::SpawnLevel(int32 Level)
 			}
 		}
 
-		
-		//Spawn Enemies
+		//Overwrite Movement Data
+		FProgressionMovementData& MovementData = LevelData->Movement;
 		
 		//Spawn Character
 		for(int CharacterIndex = 0; CharacterIndex < LevelData->Characters.Num(); ++CharacterIndex)
@@ -129,4 +129,9 @@ int AProgressionData::GetNumLevels() const
 AStaticMeshActor* AProgressionData::GetTargetSightActor() const
 {
 	return TargetSightMesh;
+}
+
+FProgressionLevelData* AProgressionData::GetDataFromLevelIndex(int index)
+{
+	return &Levels[index];
 }

@@ -173,6 +173,7 @@ void FProgressionDetails::ShowSelectedLevel(IDetailLayoutBuilder& DetailBuilder,
 	const TSharedPtr<IPropertyHandle> TimeLimitHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, TimeLimit));
 	const TSharedPtr<IPropertyHandle> GroundStaticMeshActorHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, GroundMesh));
 	const TSharedPtr<IPropertyHandle> TargetMeshActorHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, TargetSightMesh));
+	const TSharedPtr<IPropertyHandle> MovementHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, Movement));
 	const TSharedPtr<IPropertyHandleArray> CharactersArrayHandle = LevelHandle->GetChildHandle(GET_MEMBER_NAME_CHECKED(FProgressionLevelData, Characters))->AsArray();
 
 	uint32 NumElements;
@@ -184,6 +185,7 @@ void FProgressionDetails::ShowSelectedLevel(IDetailLayoutBuilder& DetailBuilder,
 	Category.AddProperty(TimeLimitHandle);
 	Category.AddProperty(GroundStaticMeshActorHandle);
 	Category.AddProperty(TargetMeshActorHandle);
+	Category.AddProperty(MovementHandle);
 	
 	for( uint32 Count = 0; Count < NumElements; ++Count)
 	{

@@ -359,5 +359,18 @@ void ASTBPlayerController::ResetPlayer()
 	CurrentPlayerLocation = FVector2D(0.1f);
 	CurrentAcceleration = FVector2D(0.1f);
 	if(IsValid(PlayerPawn))
+	{
 		PlayerPawn->LockMovement(false);
+		if(IsValid(GetGameplay()->GetLevelData()))
+		{
+			const FProgressionMovementData* CurrentMovementData = &GetGameplay()->GetLevelData()->GetDataFromLevelIndex(GetGameplay()->GetLevel())->Movement;
+			if (CurrentMovementData->bOverwriteMovement)
+			{
+				PlayerPawn->PlayerSpeed = CurrentMovementData->Speed;
+				PlayerPawn->Acceleration = CurrentMovementData->Acceleration;
+				PlayerPawn->Deceleration = CurrentMovementData->NormalDeceleration;
+				PlayerPawn->BrakeDeceleration = CurrentMovementData->BrakeDeceleration;
+			}
+		}
+	}
 }
