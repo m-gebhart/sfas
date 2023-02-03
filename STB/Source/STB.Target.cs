@@ -8,6 +8,6 @@ public class STBTarget : TargetRules
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.AddRange( new string[] { "STB", "STBEditor" } );
+		ExtraModuleNames.AddRange( new string[] { "STB" } );
 	}
 }

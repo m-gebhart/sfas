@@ -3,8 +3,6 @@
 
 #include "STBPlayerController.h"
 
-#include <windows/PxWindowsIntrinsics.h>
-
 #include "EngineUtils.h"
 #include "ProgressionData.h"
 #include "Gameplay.h"
@@ -126,7 +124,6 @@ void ASTBPlayerController::ContinueGame()
 		else
 		{
 			Gameplay->ChooseRandomBallLocation();
-			
 			Gameplay->SetTime(Gameplay->GetTotalTimeLimit());
 		}
 	}	
