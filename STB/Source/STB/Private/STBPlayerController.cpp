@@ -185,7 +185,7 @@ bool ASTBPlayerController::bIsTargetCaptured()
 {
 	if (GetPlayerPawn() && GetGameplay() && GetGameplay()->GetLevelData()->GetTargetSightActor())
 	{
-		return GetPlayerPawn()->MovementHeight < GetGameplay()->GetLevelData()->GetTargetSightActor()->GetActorLocation().Z;
+		return GetPlayerPawn()->MovementHeight*0.8f < GetGameplay()->GetLevelData()->GetTargetSightActor()->GetActorLocation().Z;
 	}
 	return false;
 }

@@ -1,5 +1,8 @@
 ﻿#include "Gameplay.h"
 
+#include "STBPawn.h"
+#include "STBPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 UGameplay::UGameplay()
@@ -140,9 +143,9 @@ bool UGameplay::TryMove(const FVector2D& PlayerGuess, const FVector2D& BallLocat
 void UGameplay::ChooseRandomBallLocation()
 {
 	BallLocation = CurrentBallBounds.Origin;
-	BallLocation.X += FMath::RandRange( -CurrentBallBounds.BoxExtent.X, CurrentBallBounds.BoxExtent.X );
-	BallLocation.Y += FMath::RandRange( -CurrentBallBounds.BoxExtent.Y, CurrentBallBounds.BoxExtent.Y );
-	BallLocation.Z = CurrentBallBounds.BoxExtent.Z;
+	BallLocation.X += FMath::RandRange( -CurrentBallBounds.BoxExtent.X, CurrentBallBounds.BoxExtent.X);
+	BallLocation.Y += FMath::RandRange( -CurrentBallBounds.BoxExtent.Y, CurrentBallBounds.BoxExtent.Y);
+	BallLocation.Z += CurrentBallBounds.BoxExtent.Z;
 	
 	Levels->GetTargetSightActor()->SetActorLocation(BallLocation);
 }
