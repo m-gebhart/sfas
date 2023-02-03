@@ -31,7 +31,9 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void Select_Implementation() override;
 	virtual void Show(bool bShow) override;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MinimapPadding = 50.f;
 
 private:
 
@@ -95,9 +97,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	FVector2D MinimapSize;
-
-	UPROPERTY(VisibleAnywhere)
-	float MinimapPadding = 50.f;
 
 	UPROPERTY(VisibleAnywhere)
 	FTimerHandle CountdownTimerHandle;

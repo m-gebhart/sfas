@@ -180,17 +180,10 @@ void UPlayingScreen::SetMinimap()
 		//Set Minimap Size
 		const ASTBPlayerCameraManager* PlayerCameraManager = Cast<ASTBPlayerCameraManager>(PlayerController->PlayerCameraManager);
 		MinimapSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY())*PlayerCameraManager->MinimapScale;
-		MinimapSlot->SetSize(MinimapSize + FVector2D(MinimapPadding*2));
+		MinimapSlot->SetSize(MinimapSize + FVector2D(MinimapPadding*2, MinimapPadding));
 
 		//reset color of target image
 		Images[TargetImageIndex]->SetBrushTintColor(FColor::White);
-		
-		//Attach Level Text right below Minimap
-		if (UCanvasPanelSlot* LevelTextSlot = Cast<UCanvasPanelSlot>(Texts[LevelTextIndex]->Slot))
-		{
-			LevelTextSlot->SetPosition(FVector2D(LevelTextSlot->GetPosition().X, MinimapSize.Y));
-		}
-
 	}
 }
 
@@ -244,7 +237,6 @@ void UPlayingScreen::DoReveal(const bool bLastGuessCorrect)
 	ShowPrompt(true);
 	PlayerController->GetPlayerPawn()->ShowBeamUp(bLastGuessCorrect ? WinColor : LoseColor);
 	PlayingState = EPlayingState::Showing;
-	UE_LOG(LogTemp, Warning, TEXT("SHOWING..."));
 }
 
 void UPlayingScreen::StartCountdown()
@@ -296,9 +288,7 @@ void UPlayingScreen::Reset()
 			const_cast<UGameplay*>(Gameplay)->SetTime(Gameplay->GetTotalTimeLimit());
 		}
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("RESET"));
-
+	
 	SetMinimap();
 	StartCountdown();
 
