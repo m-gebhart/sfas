@@ -111,11 +111,7 @@ void UScreen::Alt2_Implementation()
 {
 }
 
-void UScreen::Special1_Implementation()
-{
-}
-
-void UScreen::Special2_Implementation()
+void UScreen::Special_Implementation()
 {
 }
 

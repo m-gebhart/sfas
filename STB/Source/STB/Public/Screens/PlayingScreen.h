@@ -30,6 +30,7 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void Select_Implementation() override;
+	virtual void Special_Implementation() override;
 	virtual void Show(bool bShow) override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

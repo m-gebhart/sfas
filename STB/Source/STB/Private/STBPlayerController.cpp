@@ -21,8 +21,7 @@ const FString ASTBPlayerController::TopButtonActionName = TEXT("TopButton");
 const FString ASTBPlayerController::LeftButtonActionName = TEXT("LeftButton");
 const FString ASTBPlayerController::RightButtonActionName = TEXT("RightButton");
 const FString ASTBPlayerController::BottomButtonActionName = TEXT("BottomButton");
-const FString ASTBPlayerController::SpecialLeftButtonActionName = TEXT("SpecialLeftButton");
-const FString ASTBPlayerController::SpecialRightButtonActionName = TEXT("SpecialRightButton");
+const FString ASTBPlayerController::SpecialButtonActionName = TEXT("SpecialButton");
 const FString ASTBPlayerController::LeftStickXAxisName = TEXT("LeftX");
 const FString ASTBPlayerController::LeftStickYAxisName = TEXT("LeftY");
 const FString ASTBPlayerController::RightStickXAxisName = TEXT("RightX");
@@ -230,8 +229,7 @@ void ASTBPlayerController::SetupInputComponent()
 		InputComponent->BindAction(*LeftButtonActionName, IE_Pressed, this, &ASTBPlayerController::LeftButtonPress);
 		InputComponent->BindAction(*RightButtonActionName, IE_Pressed, this, &ASTBPlayerController::RightButtonPress);
 		InputComponent->BindAction(*BottomButtonActionName, IE_Pressed, this, &ASTBPlayerController::BottomButtonPress);
-		InputComponent->BindAction(*SpecialLeftButtonActionName, IE_Pressed, this, &ASTBPlayerController::SpecialLeftButtonPress);
-		InputComponent->BindAction(*SpecialRightButtonActionName, IE_Pressed, this, &ASTBPlayerController::SpecialRightButtonPress);
+		InputComponent->BindAction(*SpecialButtonActionName, IE_Pressed, this, &ASTBPlayerController::SpecialButtonPress);
 
 		InputComponent->BindAxis(*LeftStickXAxisName, this, &ASTBPlayerController::LeftRight);
 		InputComponent->BindAxis(*LeftStickYAxisName, this, &ASTBPlayerController::UpDown);
@@ -338,19 +336,11 @@ void ASTBPlayerController::BottomButtonPress()
 	}	
 }
 
-void ASTBPlayerController::SpecialLeftButtonPress()
+void ASTBPlayerController::SpecialButtonPress()
 {
 	if(const int Index = static_cast<int>(CurrentState); Index >= 0 && Index < static_cast<int>(ESTBGameMode::NumModes))
 	{
-		Widgets[Index]->Special1();
-	}
-}
-
-void ASTBPlayerController::SpecialRightButtonPress()
-{
-	if(const int Index = static_cast<int>(CurrentState); Index >= 0 && Index < static_cast<int>(ESTBGameMode::NumModes))
-	{
-		Widgets[Index]->Special2();
+		Widgets[Index]->Special();
 	}
 }
 

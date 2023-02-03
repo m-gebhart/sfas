@@ -2,7 +2,6 @@
 
 #include "Screens/PlayingScreen.h"
 
-#include "AIController.h"
 #include "Gameplay.h"
 #include "STBPlayerCameraManager.h"
 #include "Components/CanvasPanel.h"
@@ -11,7 +10,7 @@
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
 #include "Screens/SettingsScreen.h"
-
+#include "STB/STBGameModes.h"
 
 void UPlayingScreen::NativeConstruct()
 {
@@ -146,6 +145,15 @@ void UPlayingScreen::Select_Implementation()
 		Reset();
 	}
 }
+
+void UPlayingScreen::Special_Implementation()
+{
+	if(IsValid(PlayerController))
+	{
+		PlayerController->ShowUI(ESTBGameMode::Outro);
+	}
+}
+
 
 void UPlayingScreen::Show(bool bShow)
 {

@@ -143,10 +143,7 @@ private:
 	void BottomButtonPress();
 
 	UFUNCTION()
-	void SpecialLeftButtonPress();
-
-	UFUNCTION()
-	void SpecialRightButtonPress();
+	void SpecialButtonPress();
 
 	UFUNCTION()
 	void ResetPlayer();
@@ -183,8 +180,7 @@ private:
 	static const FString LeftButtonActionName;
 	static const FString RightButtonActionName;
 	static const FString BottomButtonActionName;
-	static const FString SpecialLeftButtonActionName;
-	static const FString SpecialRightButtonActionName;
+	static const FString SpecialButtonActionName;
 	static const FString LeftStickXAxisName;
 	static const FString LeftStickYAxisName;
 	static const FString RightStickXAxisName;
