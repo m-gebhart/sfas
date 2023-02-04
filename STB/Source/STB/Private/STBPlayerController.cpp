@@ -263,6 +263,9 @@ void ASTBPlayerController::LeftRight(float Value)
 {
 	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && PlayerPawn->CanMove())
 	{
+		/* removing precision to add challenge */
+		Value = FMath::Sign(Value);
+		
 		/* if borders on the left or right are hit, start bounce back*/
 		if(VerticalBorderHitByPlayer() && !PlayerPawn->GetBouncing()) 
 		{
@@ -293,6 +296,9 @@ void ASTBPlayerController::UpDown(float Value)
 {
 	if(CurrentState == ESTBGameMode::Playing && !Gameplay->bIsTimeOver() && PlayerPawn->CanMove())
 	{
+		/* removing precision to add challenge */
+		Value = FMath::Sign(Value);
+
 		/* if borders on the top or bottom are hit, start bounce back*/
 		if(HorizontalBorderHitByPlayer() && !PlayerPawn->GetBouncing()) 
 		{
