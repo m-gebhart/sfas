@@ -49,6 +49,9 @@ public:
 	bool GetWin() const;
 
 	UFUNCTION(BlueprintCallable)
+	bool GetGameComplete() const;
+
+	UFUNCTION(BlueprintCallable)
 	bool TryMove3D(const FVector& PlayerGuess3D, const FVector& BallLocation3D);
 	
 	UFUNCTION(BlueprintCallable)
@@ -75,7 +78,7 @@ public:
 protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int StartingLives = 3;
+	int StartingLives = 1;
 	
 private:
 	
@@ -105,5 +108,7 @@ private:
 	
 	UPROPERTY(VisibleAnywhere)
 	bool bWin;
-	
+
+	UPROPERTY(VisibleAnywhere)
+	bool bGameComplete;
 };

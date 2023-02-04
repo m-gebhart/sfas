@@ -167,9 +167,15 @@ void UPlayingScreen::Show(bool bShow)
 
 void UPlayingScreen::SetLevel(int Level)
 {
+	int LevelCount = 0;
+	if(IsValid(PlayerController) && IsValid(PlayerController->GetGameplay()))
+	{
+		LevelCount = PlayerController->GetGameplay()->GetLevelData()->GetNumLevels();
+	}
+	
 	if(LevelTextIndex >= 0 && LevelTextIndex < Texts.Num())
 	{
-		Texts[LevelTextIndex]->SetText(FText::Format(LevelTextFormat, Level));
+		Texts[LevelTextIndex]->SetText(FText::FormatNamed(LevelTextFormat, TEXT("LEVEL"), Level, TEXT("NUMBER"), LevelCount));
 	}
 }
 

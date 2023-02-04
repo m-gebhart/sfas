@@ -92,6 +92,7 @@ void ASTBPlayerController::CreateUI()
 	SetupScreen(ESTBGameMode::Credits, CreditsClass, TEXT("Credits"));
 	SetupScreen(ESTBGameMode::Playing, PlayingClass, TEXT("Playing"));
 	SetupScreen(ESTBGameMode::GameOver, GameOverClass, TEXT("GameOver"));
+	SetupScreen(ESTBGameMode::GameComplete, GameCompleteClass, TEXT("GameWon"));
 	SetupScreen(ESTBGameMode::Outro, OutroClass, TEXT("Outro"));
 	ShowUI(ESTBGameMode::Intro);
 }
@@ -113,7 +114,11 @@ void ASTBPlayerController::ContinueGame()
 	{
 		ResetPlayer();
 
-		if(Gameplay->GetWin())
+		if (Gameplay->GetGameComplete())
+		{
+			ShowUI(ESTBGameMode::GameComplete);	
+		}
+		else if(Gameplay->GetWin())
 		{
 			Gameplay->NextLevel();
 		}

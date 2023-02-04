@@ -100,6 +100,9 @@ protected:
 	TSubclassOf<UScreen> CreditsClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UScreen> GameCompleteClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UScreen> OutroClass;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")

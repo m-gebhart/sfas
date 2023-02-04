@@ -20,13 +20,14 @@ void UGameplay::StartNewGame()
 {
 	CurrentLevel = 0;
 	CurrentLives = StartingLives;
+	bGameComplete = false;
 }
 
 void UGameplay::NextLevel()
 {
 	Levels->CleanupLevel();
 	
-	if(CurrentLevel < Levels->GetNumLevels())
+	if(!bGameComplete && CurrentLevel < Levels->GetNumLevels())
 	{
 		const FProgressionLevelData* LevelData = Levels->SpawnLevel(CurrentLevel);
 
@@ -85,6 +86,11 @@ bool UGameplay::GetWin() const
 	return bWin;
 }
 
+bool UGameplay::GetGameComplete() const
+{
+	return bGameComplete;
+}
+
 float UGameplay::bIsTimeOver() const
 {
 	return CurrentTimeLeft < 0;
@@ -121,7 +127,6 @@ bool UGameplay::TryMove3D(const FVector& PlayerGuess3D, const FVector& BallLocat
 	return TryMove(PlayerLocation2D, BallLocation2D);
 }
 
-
 bool UGameplay::TryMove(const FVector2D& PlayerGuess, const FVector2D& BallLocation2D)
 {
 	bWin = false;
@@ -129,6 +134,9 @@ bool UGameplay::TryMove(const FVector2D& PlayerGuess, const FVector2D& BallLocat
 	
 	if(Distance <= CurrentRequiredDistance)
 	{
+		if(CurrentLevel == Levels->GetNumLevels()-1)
+			bGameComplete = true;
+		
 		CurrentLevel = FMath::Clamp(CurrentLevel + 1, 0, Levels->GetNumLevels()-1);
 		bWin = true;
 	}

@@ -4,7 +4,6 @@
 
 #include "Gameplay.h"
 #include "STBPlayerController.h"
-#include "Components/BoxComponent.h"
 #include "Engine/StaticMeshActor.h"
 #include "Kismet/GameplayStatics.h"
 

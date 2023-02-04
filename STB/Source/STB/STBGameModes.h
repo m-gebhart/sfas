@@ -11,6 +11,7 @@ enum class ESTBGameMode : uint8
 	Credits,
 	Playing,
 	GameOver,
+	GameComplete,
 	Outro,
 
 	NumModes
