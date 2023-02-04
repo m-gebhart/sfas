@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ProgressionData.h"
 #include "STBPawn.h"
 #include "GameFramework/PlayerController.h"
 #include "STBPlayerController.generated.h"
@@ -30,6 +31,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void CreateUI();
+
+	UFUNCTION(BlueprintCallable)
+	void CacheMovementData();
 
 	UFUNCTION(BlueprintCallable)
 	void BeginNewGame();
@@ -149,6 +153,9 @@ private:
 	void SpecialButtonPress();
 
 	UFUNCTION()
+	void UpdateMovementData(const FProgressionMovementData &InMovementData);
+
+	UFUNCTION()
 	void ResetPlayer();
 	
 	UPROPERTY(VisibleAnywhere)
@@ -177,6 +184,7 @@ private:
 	
 	FVector LastOrbitPawnLocation;
 	FRotator LastOrbitPawnViewRotation;
+	FProgressionMovementData InitialMovementData;
 	ESTBGameMode CurrentState;
 
 	static const FString TopButtonActionName;

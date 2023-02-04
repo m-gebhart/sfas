@@ -97,6 +97,18 @@ void ASTBPlayerController::CreateUI()
 	ShowUI(ESTBGameMode::Intro);
 }
 
+void ASTBPlayerController::CacheMovementData()
+{
+	if(!InitialMovementData.bOverwriteMovement && IsValid(PlayerPawn))
+	{
+		InitialMovementData.bOverwriteMovement = true;
+		InitialMovementData.Speed = PlayerPawn->PlayerSpeed;
+		InitialMovementData.Acceleration = PlayerPawn->Acceleration;
+		InitialMovementData.NormalDeceleration = PlayerPawn->Deceleration;
+		InitialMovementData.BrakeDeceleration = PlayerPawn->BrakeDeceleration;
+	}
+}
+
 void ASTBPlayerController::BeginNewGame()
 {
 	if(Gameplay != nullptr)
@@ -346,6 +358,15 @@ void ASTBPlayerController::SpecialButtonPress()
 	}
 }
 
+void ASTBPlayerController::UpdateMovementData(const FProgressionMovementData& InMovementData)
+{
+	PlayerPawn->PlayerSpeed = InMovementData.Speed;
+	PlayerPawn->Acceleration = InMovementData.Acceleration;
+	PlayerPawn->Deceleration = InMovementData.NormalDeceleration;
+	PlayerPawn->BrakeDeceleration = InMovementData.BrakeDeceleration;
+}
+
+
 void ASTBPlayerController::ResetPlayer()
 {
 	CurrentPlayerLocation = FVector2D(0.1f);
@@ -353,15 +374,17 @@ void ASTBPlayerController::ResetPlayer()
 	if(IsValid(PlayerPawn))
 	{
 		PlayerPawn->LockMovement(false);
+		CacheMovementData();
 		if(IsValid(GetGameplay()->GetLevelData()))
 		{
 			const FProgressionMovementData* CurrentMovementData = &GetGameplay()->GetLevelData()->GetDataFromLevelIndex(GetGameplay()->GetLevel())->Movement;
-			if (CurrentMovementData->bOverwriteMovement)
+			if(GetGameplay()->GetLevel() == 0 && InitialMovementData.bOverwriteMovement)
 			{
-				PlayerPawn->PlayerSpeed = CurrentMovementData->Speed;
-				PlayerPawn->Acceleration = CurrentMovementData->Acceleration;
-				PlayerPawn->Deceleration = CurrentMovementData->NormalDeceleration;
-				PlayerPawn->BrakeDeceleration = CurrentMovementData->BrakeDeceleration;
+				UpdateMovementData(InitialMovementData);
+			}
+			else if (CurrentMovementData->bOverwriteMovement)
+			{
+				UpdateMovementData(*CurrentMovementData);
 			}
 		}
 	}
